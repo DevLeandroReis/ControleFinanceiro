@@ -11,15 +11,18 @@ namespace ControleFinanceiro.Application.Services
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IJwtService _jwtService;
+        private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
 
         public UsuarioService(
             IUsuarioRepository usuarioRepository,
             IJwtService jwtService,
+            IEmailService emailService,
             IMapper mapper)
         {
             _usuarioRepository = usuarioRepository;
             _jwtService = jwtService;
+            _emailService = emailService;
             _mapper = mapper;
         }
 
@@ -37,8 +40,11 @@ namespace ControleFinanceiro.Application.Services
 
             var usuarioCriado = await _usuarioRepository.AddAsync(usuario);
             
-            // Aqui você pode implementar o envio de email de confirmação
-            // await _emailService.EnviarConfirmacaoEmailAsync(usuarioCriado.Email, usuarioCriado.TokenConfirmacaoEmail);
+            // Enviar email de confirmação
+            await _emailService.EnviarConfirmacaoEmailAsync(
+                usuarioCriado.Email, 
+                usuarioCriado.Nome, 
+                usuarioCriado.TokenConfirmacaoEmail!);
 
             return _mapper.Map<UsuarioDto>(usuarioCriado);
         }
@@ -87,8 +93,8 @@ namespace ControleFinanceiro.Application.Services
             usuario.DefinirTokenRecuperacaoSenha(token, expiracao);
             await _usuarioRepository.UpdateAsync(usuario);
 
-            // Aqui você pode implementar o envio de email com o token
-            //await _emailService.EnviarTokenRecuperacaoSenhaAsync(usuario.Email, token);
+            // Enviar email com o token de recuperação de senha
+            await _emailService.EnviarTokenRecuperacaoSenhaAsync(usuario.Email, usuario.Nome, token);
 
             return true;
         }

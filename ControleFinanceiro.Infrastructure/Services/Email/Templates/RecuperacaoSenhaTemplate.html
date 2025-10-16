@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang='pt-BR'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Recuperação de Senha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        .header {
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 0 0 5px 5px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <h1>Recuperação de Senha</h1>
+        </div>
+        <div class='content'>
+            <h2>Olá, {nomeUsuario}!</h2>
+            <p>Recebemos uma solicitação para redefinir a senha da sua conta no Controle Financeiro.</p>
+            <p>Para criar uma nova senha, clique no botão abaixo:</p>
+            <div style='text-align: center;'>
+                <a href='{urlRecuperacao}' class='button'>Redefinir Senha</a>
+            </div>
+            <p>Ou copie e cole o seguinte link no seu navegador:</p>
+            <p style='word-break: break-all; color: #dc3545;'>{urlRecuperacao}</p>
+            <div class='warning'>
+                <strong>?? Importante:</strong>
+                <ul>
+                    <li>Este link é válido por 2 horas</li>
+                    <li>Se você não solicitou a recuperação de senha, ignore este email</li>
+                    <li>Sua senha atual permanecerá ativa até que você defina uma nova</li>
+                </ul>
+            </div>
+        </div>
+        <div class='footer'>
+            <p>© 2024 Controle Financeiro. Todos os direitos reservados.</p>
+            <p>Este é um email automático, por favor não responda.</p>
+        </div>
+    </div>
+</body>
+</html>

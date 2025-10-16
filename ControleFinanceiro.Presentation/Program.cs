@@ -1,8 +1,10 @@
 using ControleFinanceiro.Application.Interfaces.Services;
 using ControleFinanceiro.Application.Services;
+using ControleFinanceiro.Application.Models;
 using ControleFinanceiro.Domain.Interfaces.Repositories;
 using ControleFinanceiro.Infrastructure.Data;
 using ControleFinanceiro.Infrastructure.Data.Repositories;
+using ControleFinanceiro.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -82,6 +84,9 @@ namespace ControleFinanceiro
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // Configurar Email Settings
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
             // Configurar AutoMapper
             builder.Services.AddAutoMapper(
                 typeof(Program),
@@ -133,6 +138,8 @@ namespace ControleFinanceiro
             builder.Services.AddScoped<IUsuarioService, UsuarioService>();
             builder.Services.AddScoped<IContaService, ContaService>();
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
             var app = builder.Build();
 
