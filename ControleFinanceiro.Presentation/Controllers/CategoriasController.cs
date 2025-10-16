@@ -103,26 +103,20 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter categoria por nome
+        /// Obter categorias que contêm parte do nome especificado (busca parcial, case-insensitive)
         /// </summary>
         [HttpGet("nome/{nome}")]
-        [ProducesResponseType(typeof(CategoriaDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CategoriaDto>> GetByNome(string nome)
+        [ProducesResponseType(typeof(IEnumerable<CategoriaDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CategoriaDto>>> GetByNome(string nome)
         {
             try
             {
-                var categoria = await _categoriaService.GetByNomeAsync(nome);
-                if (categoria == null)
-                {
-                    return NotFound($"Categoria com nome '{nome}' não encontrada");
-                }
-
-                return Ok(categoria);
+                var categorias = await _categoriaService.GetByNomeAsync(nome);
+                return Ok(categorias);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao obter categoria por nome: {Nome}", nome);
+                _logger.LogError(ex, "Erro ao obter categorias por nome: {Nome}", nome);
                 return StatusCode(500, "Erro interno do servidor");
             }
         }

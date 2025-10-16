@@ -1,0 +1,1378 @@
+{
+	"info": {
+		"_postman_id": "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+		"name": "Controle Financeiro - Contas API",
+		"description": "Coleção completa de testes para todos os endpoints do ContasController",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Gerenciamento de Contas",
+			"item": [
+				{
+					"name": "01 - Criar Nova Conta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('nome');",
+									"    pm.expect(jsonData).to.have.property('ativa');",
+									"    pm.expect(jsonData).to.have.property('proprietarioId');",
+									"    pm.expect(jsonData).to.have.property('proprietarioNome');",
+									"    pm.expect(jsonData).to.have.property('usuarios');",
+									"    pm.expect(jsonData).to.have.property('createdAt');",
+									"    pm.expect(jsonData).to.have.property('updatedAt');",
+									"});",
+									"",
+									"pm.test(\"Conta is active by default\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ativa).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Location header is present\", function () {",
+									"    pm.response.to.have.header(\"Location\");",
+									"});",
+									"",
+									"// Salvar ID da conta criada",
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"contaId\", jsonData.id);",
+									"    pm.environment.set(\"contaNome\", jsonData.nome);",
+									"    pm.environment.set(\"proprietarioId\", jsonData.proprietarioId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Conta Principal\",\n  \"descricao\": \"Conta para despesas e receitas pessoais\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Contas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas"
+							]
+						},
+						"description": "Cria uma nova conta financeira. O usuário autenticado será automaticamente definido como proprietário.\n\n**Requer autenticação JWT.**"
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Obter Conta por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('nome');",
+									"    pm.expect(jsonData).to.have.property('ativa');",
+									"    pm.expect(jsonData).to.have.property('proprietarioId');",
+									"    pm.expect(jsonData).to.have.property('usuarios');",
+									"    pm.expect(jsonData).to.have.property('createdAt');",
+									"});",
+									"",
+									"pm.test(\"ID matches the requested ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"contaId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}"
+							]
+						},
+						"description": "Retorna os dados de uma conta específica pelo ID. Só é possível acessar contas que o usuário possui ou tem permissão.\n\n**Requer autenticação JWT.**"
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Obter Minhas Contas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"All contas have required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        jsonData.forEach(function(conta) {",
+									"            pm.expect(conta).to.have.property('id');",
+									"            pm.expect(conta).to.have.property('nome');",
+									"            pm.expect(conta).to.have.property('ativa');",
+									"            pm.expect(conta).to.have.property('proprietarioId');",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/minhas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"minhas"
+							]
+						},
+						"description": "Retorna todas as contas do usuário autenticado (proprietário ou com acesso compartilhado).\n\n**Requer autenticação JWT.**"
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Atualizar Conta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Conta was updated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('nome');",
+									"    pm.expect(jsonData.nome).to.eql('Conta Principal Atualizada');",
+									"});",
+									"",
+									"pm.test(\"UpdatedAt is more recent than CreatedAt\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(new Date(jsonData.updatedAt)).to.be.at.least(new Date(jsonData.createdAt));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Conta Principal Atualizada\",\n  \"descricao\": \"Descrição atualizada da conta\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}"
+							]
+						},
+						"description": "Atualiza os dados de uma conta existente.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário ou usuários com permissão podem atualizar.**"
+					},
+					"response": []
+				},
+				{
+					"name": "05 - Ativar Conta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('ativada');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}/ativar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}",
+								"ativar"
+							]
+						},
+						"description": "Ativa uma conta previamente desativada.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário pode ativar a conta.**"
+					},
+					"response": []
+				},
+				{
+					"name": "06 - Desativar Conta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('desativada');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}/desativar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}",
+								"desativar"
+							]
+						},
+						"description": "Desativa uma conta. Contas desativadas não podem ser usadas para novas transações.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário pode desativar a conta.**"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gerenciamento básico de contas (CRUD e ativação/desativação)"
+		},
+		{
+			"name": "Solicitações de Acesso",
+			"item": [
+				{
+					"name": "01 - Solicitar Acesso a Conta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Solicitação created successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('solicitanteId');",
+									"    pm.expect(jsonData).to.have.property('contaId');",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"    pm.expect(jsonData.status).to.eql(1); // Pendente",
+									"});",
+									"",
+									"// Salvar ID da solicitação",
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"solicitacaoId\", jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"contaId\": \"{{contaId}}\",\n  \"mensagem\": \"Gostaria de ter acesso a esta conta para colaborar nas finanças\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Contas/solicitar-acesso",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"solicitar-acesso"
+							]
+						},
+						"description": "Solicita acesso a uma conta de outro usuário. O proprietário da conta receberá a solicitação para aprovação.\n\n**Requer autenticação JWT.**\n\n**Nota:** Use um token de outro usuário (não o proprietário) para testar este endpoint adequadamente."
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Obter Solicitações Recebidas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"All solicitações have required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        jsonData.forEach(function(solicitacao) {",
+									"            pm.expect(solicitacao).to.have.property('id');",
+									"            pm.expect(solicitacao).to.have.property('solicitanteId');",
+									"            pm.expect(solicitacao).to.have.property('solicitanteNome');",
+									"            pm.expect(solicitacao).to.have.property('contaId');",
+									"            pm.expect(solicitacao).to.have.property('status');",
+									"            pm.expect(solicitacao.status).to.eql(1); // Pendente",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/solicitacoes/recebidas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"solicitacoes",
+								"recebidas"
+							]
+						},
+						"description": "Retorna todas as solicitações de acesso pendentes recebidas pelo proprietário das contas.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário pode ver as solicitações recebidas.**"
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Obter Solicitações Enviadas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"All solicitações have required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        jsonData.forEach(function(solicitacao) {",
+									"            pm.expect(solicitacao).to.have.property('id');",
+									"            pm.expect(solicitacao).to.have.property('proprietarioId');",
+									"            pm.expect(solicitacao).to.have.property('proprietarioNome');",
+									"            pm.expect(solicitacao).to.have.property('contaId');",
+									"            pm.expect(solicitacao).to.have.property('contaNome');",
+									"            pm.expect(solicitacao).to.have.property('status');",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/solicitacoes/enviadas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"solicitacoes",
+								"enviadas"
+							]
+						},
+						"description": "Retorna todas as solicitações de acesso enviadas pelo usuário autenticado.\n\n**Requer autenticação JWT.**"
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Aprovar Solicitação",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('aprovada');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/solicitacoes/{{solicitacaoId}}/aprovar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"solicitacoes",
+								"{{solicitacaoId}}",
+								"aprovar"
+							]
+						},
+						"description": "Aprova uma solicitação de acesso à conta. Isso concede ao solicitante acesso à conta.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário da conta pode aprovar solicitações.**"
+					},
+					"response": []
+				},
+				{
+					"name": "05 - Rejeitar Solicitação",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('rejeitada');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/solicitacoes/{{solicitacaoId}}/rejeitar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"solicitacoes",
+								"{{solicitacaoId}}",
+								"rejeitar"
+							]
+						},
+						"description": "Rejeita uma solicitação de acesso à conta.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário da conta pode rejeitar solicitações.**"
+					},
+					"response": []
+				},
+				{
+					"name": "06 - Cancelar Solicitação",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('cancelada');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/solicitacoes/{{solicitacaoId}}/cancelar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"solicitacoes",
+								"{{solicitacaoId}}",
+								"cancelar"
+							]
+						},
+						"description": "Cancela uma solicitação de acesso enviada anteriormente.\n\n**Requer autenticação JWT.**\n**Apenas o solicitante pode cancelar sua própria solicitação.**"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gerenciamento de solicitações de acesso a contas"
+		},
+		{
+			"name": "Gerenciamento de Usuários",
+			"item": [
+				{
+					"name": "01 - Obter Usuários da Conta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"All usuarios have required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        var usuario = jsonData[0];",
+									"        pm.expect(usuario).to.have.property('id');",
+									"        pm.expect(usuario).to.have.property('usuarioId');",
+									"        pm.expect(usuario).to.have.property('usuarioNome');",
+									"        pm.expect(usuario).to.have.property('usuarioEmail');",
+									"        pm.expect(usuario).to.have.property('contaId');",
+									"        pm.expect(usuario).to.have.property('podeAdicionarUsuarios');",
+									"        pm.expect(usuario).to.have.property('ativo');",
+									"        pm.expect(usuario).to.have.property('dataAdesao');",
+									"        ",
+									"        // Salvar usuarioId para testes de permissão",
+									"        if (jsonData.length > 1) {",
+									"            pm.environment.set(\"usuarioContaId\", jsonData[1].usuarioId);",
+									"        }",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}/usuarios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}",
+								"usuarios"
+							]
+						},
+						"description": "Retorna a lista de todos os usuários que têm acesso à conta.\n\n**Requer autenticação JWT.**\n**Apenas usuários com acesso à conta podem visualizar a lista.**"
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Conceder Permissão Adicionar Usuários",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('concedida');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}/usuarios/{{usuarioContaId}}/conceder-permissao",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}",
+								"usuarios",
+								"{{usuarioContaId}}",
+								"conceder-permissao"
+							]
+						},
+						"description": "Concede permissão para um usuário adicionar outros usuários à conta.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário pode conceder permissões.**"
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Remover Permissão Adicionar Usuários",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('removida');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}/usuarios/{{usuarioContaId}}/remover-permissao",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}",
+								"usuarios",
+								"{{usuarioContaId}}",
+								"remover-permissao"
+							]
+						},
+						"description": "Remove a permissão de um usuário para adicionar outros usuários à conta.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário pode remover permissões.**"
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Remover Usuário da Conta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('removido');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}/usuarios/{{usuarioContaId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}",
+								"usuarios",
+								"{{usuarioContaId}}"
+							]
+						},
+						"description": "Remove um usuário da conta, revogando seu acesso.\n\n**Requer autenticação JWT.**\n**Apenas o proprietário pode remover usuários.**\n**O proprietário não pode ser removido.**"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gerenciamento de usuários e permissões em contas"
+		},
+		{
+			"name": "Testes de Erro e Validação",
+			"item": [
+				{
+					"name": "01 - Criar Conta sem Nome (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains validation errors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('errors');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"\",\n  \"descricao\": \"Teste sem nome\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Contas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas"
+							]
+						},
+						"description": "Testa validação ao tentar criar uma conta sem nome."
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Obter Conta Inexistente (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response contains error message\", function () {",
+									"    var responseText = pm.response.text();",
+									"    pm.expect(responseText).to.include(\"não encontrada\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/00000000-0000-0000-0000-000000000000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						},
+						"description": "Testa o comportamento quando uma conta não existe."
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Acesso sem Autenticação (401)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Contas/minhas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"minhas"
+							]
+						},
+						"description": "Testa acesso sem token de autenticação."
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Atualizar Conta com Nome Muito Longo (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains validation errors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('errors');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Este é um nome extremamente longo que excede o limite máximo de 100 caracteres permitidos para o nome de uma conta financeira no sistema\",\n  \"descricao\": \"Teste de validação\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Contas/{{contaId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Contas",
+								"{{contaId}}"
+							]
+						},
+						"description": "Testa validação ao tentar atualizar com nome excedendo 100 caracteres."
+					},
+					"response": []
+				}
+			],
+			"description": "Testes de validação e tratamento de erros"
+		},
+		{
+			"name": "99 - Excluir Conta (Cleanup)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response body is empty\", function () {",
+							"    pm.expect(pm.response.text()).to.be.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Contas/{{contaId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Contas",
+						"{{contaId}}"
+					]
+				},
+				"description": "Exclui a conta criada durante os testes (cleanup).\n\n**Requer autenticação JWT.**\n**Apenas o proprietário pode excluir a conta.**\n\n**Execute este teste por último para limpar os dados de teste.**"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:5001",
+			"type": "string",
+			"description": "URL base da API. Altere conforme necessário (ex: http://localhost:5000 ou sua URL de produção)"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string",
+			"description": "Token JWT obtido após o login. Execute a coleção de Usuários para obter o token."
+		},
+		{
+			"key": "contaId",
+			"value": "",
+			"type": "string",
+			"description": "ID (GUID) de uma conta válida. Será preenchido automaticamente ao executar o endpoint '01 - Criar Nova Conta'."
+		},
+		{
+			"key": "contaNome",
+			"value": "",
+			"type": "string",
+			"description": "Nome de uma conta válida. Será preenchido automaticamente ao executar o endpoint '01 - Criar Nova Conta'."
+		},
+		{
+			"key": "proprietarioId",
+			"value": "",
+			"type": "string",
+			"description": "ID do proprietário da conta. Será preenchido automaticamente ao criar uma conta."
+		},
+		{
+			"key": "solicitacaoId",
+			"value": "",
+			"type": "string",
+			"description": "ID de uma solicitação de acesso. Será preenchido automaticamente ao solicitar acesso."
+		},
+		{
+			"key": "usuarioContaId",
+			"value": "",
+			"type": "string",
+			"description": "ID de um usuário com acesso à conta (não proprietário). Será preenchido automaticamente ao listar usuários da conta."
+		}
+	]
+}

@@ -40,10 +40,10 @@ namespace ControleFinanceiro.Application.Services
             return categoria == null ? null : _mapper.Map<CategoriaDto>(categoria);
         }
 
-        public async Task<CategoriaDto?> GetByNomeAsync(string nome)
+        public async Task<IEnumerable<CategoriaDto>> GetByNomeAsync(string nome)
         {
-            var categoria = await _categoriaRepository.GetByNomeAsync(nome);
-            return categoria == null ? null : _mapper.Map<CategoriaDto>(categoria);
+            var categorias = await _categoriaRepository.GetByNomeAsync(nome);
+            return _mapper.Map<IEnumerable<CategoriaDto>>(categorias);
         }
 
         public async Task<bool> ExistsAsync(Guid id)

@@ -160,7 +160,7 @@ namespace ControleFinanceiro.Application.Services
                 throw new InvalidOperationException("Já existe uma solicitação pendente para esta conta");
             }
 
-            var solicitacao = new SolicitacaoAcessoConta(solicitarDto.ContaId, solicitanteId, conta.ProprietarioId);
+            var solicitacao = new SolicitacaoAcessoConta(solicitanteId, conta.ProprietarioId, solicitarDto.ContaId);
             var solicitacaoCriada = await _solicitacaoRepository.AddAsync(solicitacao);
 
             return _mapper.Map<SolicitacaoAcessoContaDto>(solicitacaoCriada);

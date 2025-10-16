@@ -8,7 +8,7 @@ namespace ControleFinanceiro.Application.Interfaces.Services
         Task<IEnumerable<CategoriaDto>> GetCategoriasAtivasAsync();
         Task<IEnumerable<CategoriaDto>> GetCategoriasDestacadasAsync();
         Task<CategoriaDto?> GetByIdAsync(Guid id);
-        Task<CategoriaDto?> GetByNomeAsync(string nome);
+        Task<IEnumerable<CategoriaDto>> GetByNomeAsync(string nome);
         Task<bool> ExistsAsync(Guid id);
     }
 }

@@ -6,6 +6,6 @@ namespace ControleFinanceiro.Domain.Interfaces.Repositories
     {
         Task<IEnumerable<Categoria>> GetCategoriasAtivasAsync();
         Task<IEnumerable<Categoria>> GetCategoriasDestacadasAsync();
-        Task<Categoria?> GetByNomeAsync(string nome);
+        Task<IEnumerable<Categoria>> GetByNomeAsync(string nome);
     }
 }

@@ -294,6 +294,150 @@
 				"description": "Obt�m os dados de um usu�rio espec�fico pelo ID. Requer autentica��o."
 			},
 			"response": []
+		},
+		{
+			"name": "07 - Obter Todos os Usu�rios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Lista de usu�rios retornada\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/usuarios",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios"
+					]
+				},
+				"description": "Obt�m a lista de todos os usu�rios cadastrados. Requer autentica��o."
+			},
+			"response": []
+		},
+		{
+			"name": "08 - Ativar Usu�rio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Usu�rio ativado com sucesso\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"    pm.expect(jsonData.message).to.eql('Usu�rio ativado com sucesso');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/{{usuario_id}}/ativar",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"{{usuario_id}}",
+						"ativar"
+					]
+				},
+				"description": "Ativa um usu�rio que estava desativado. Requer autentica��o."
+			},
+			"response": []
+		},
+		{
+			"name": "09 - Desativar Usu�rio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Usu�rio desativado com sucesso\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"    pm.expect(jsonData.message).to.eql('Usu�rio desativado com sucesso');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/{{usuario_id}}/desativar",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"{{usuario_id}}",
+						"desativar"
+					]
+				},
+				"description": "Desativa um usu�rio. Requer autentica��o."
+			},
+			"response": []
 		}
 	],
 	"event": [

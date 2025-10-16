@@ -27,10 +27,12 @@ namespace ControleFinanceiro.Infrastructure.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Categoria?> GetByNomeAsync(string nome)
+        public async Task<IEnumerable<Categoria>> GetByNomeAsync(string nome)
         {
             return await _dbSet
-                .FirstOrDefaultAsync(x => x.Nome.ToLower() == nome.ToLower());
+                .Where(x => x.Nome.ToLower().Contains(nome.ToLower()))
+                .OrderBy(x => x.Nome)
+                .ToListAsync();
         }
     }
 }

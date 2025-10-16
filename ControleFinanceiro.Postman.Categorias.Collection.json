@@ -1,0 +1,761 @@
+{
+	"info": {
+		"_postman_id": "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+		"name": "Controle Financeiro - Categorias API",
+		"description": "Coleção completa de testes para todos os endpoints do CategoriasController",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01 - Obter Todas as Categorias",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Content-Type is application/json\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"if (pm.response.json().length > 0) {",
+							"    var firstCategory = pm.response.json()[0];",
+							"    pm.environment.set(\"categoriaId\", firstCategory.id);",
+							"    pm.environment.set(\"categoriaNome\", firstCategory.nome);",
+							"    ",
+							"    pm.test(\"Categories have required fields\", function () {",
+							"        pm.expect(firstCategory).to.have.property('id');",
+							"        pm.expect(firstCategory).to.have.property('nome');",
+							"        pm.expect(firstCategory).to.have.property('tipo');",
+							"        pm.expect(firstCategory).to.have.property('ativo');",
+							"        pm.expect(firstCategory).to.have.property('destacada');",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias"
+					]
+				},
+				"description": "Retorna todas as categorias cadastradas no sistema (ativas e inativas).\n\n**Requer autenticação JWT.**"
+			},
+			"response": []
+		},
+		{
+			"name": "02 - Obter Categorias Ativas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"All categories are active\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    jsonData.forEach(function(categoria) {",
+							"        pm.expect(categoria.ativo).to.be.true;",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Categories have required fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    if (jsonData.length > 0) {",
+							"        var categoria = jsonData[0];",
+							"        pm.expect(categoria).to.have.property('id');",
+							"        pm.expect(categoria).to.have.property('nome');",
+							"        pm.expect(categoria).to.have.property('tipo');",
+							"        pm.expect(categoria).to.have.property('ativo');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/ativas",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"ativas"
+					]
+				},
+				"description": "Retorna apenas as categorias que estão ativas no sistema.\n\n**Requer autenticação JWT.**"
+			},
+			"response": []
+		},
+		{
+			"name": "03 - Obter Categorias Destacadas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"All categories are highlighted\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    jsonData.forEach(function(categoria) {",
+							"        pm.expect(categoria.destacada).to.be.true;",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Categories have required fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    if (jsonData.length > 0) {",
+							"        var categoria = jsonData[0];",
+							"        pm.expect(categoria).to.have.property('id');",
+							"        pm.expect(categoria).to.have.property('nome');",
+							"        pm.expect(categoria).to.have.property('destacada');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/destacadas",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"destacadas"
+					]
+				},
+				"description": "Retorna apenas as categorias destacadas (principais/favoritas) do sistema.\n\n**Requer autenticação JWT.**"
+			},
+			"response": []
+		},
+		{
+			"name": "04 - Obter Categoria por ID (Sucesso)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has required fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('nome');",
+							"    pm.expect(jsonData).to.have.property('tipo');",
+							"    pm.expect(jsonData).to.have.property('ativo');",
+							"    pm.expect(jsonData).to.have.property('destacada');",
+							"    pm.expect(jsonData).to.have.property('createdAt');",
+							"    pm.expect(jsonData).to.have.property('updatedAt');",
+							"});",
+							"",
+							"pm.test(\"ID matches the requested ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"categoriaId\"));",
+							"});",
+							"",
+							"pm.test(\"Tipo is valid enum (1=Receita, 2=Despesa)\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.tipo).to.be.oneOf([1, 2]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/{{categoriaId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"{{categoriaId}}"
+					]
+				},
+				"description": "Retorna uma categoria específica pelo seu ID (GUID).\n\n**Requer autenticação JWT.**\n\n**Nota:** Execute primeiro o endpoint \"01 - Obter Todas as Categorias\" para popular a variável `categoriaId`, ou defina manualmente um GUID válido."
+			},
+			"response": []
+		},
+		{
+			"name": "05 - Obter Categoria por ID (Não Encontrada)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    var responseText = pm.response.text();",
+							"    pm.expect(responseText).to.include(\"não encontrada\");",
+							"});",
+							"",
+							"pm.test(\"Content-Type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				},
+				"description": "Testa o comportamento quando uma categoria não é encontrada (404).\n\n**Requer autenticação JWT.**"
+			},
+			"response": []
+		},
+		{
+			"name": "06 - Buscar Categorias por Nome (Busca Parcial)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Content-Type is application/json\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"pm.test(\"Categories have required fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    if (jsonData.length > 0) {",
+							"        var categoria = jsonData[0];",
+							"        pm.expect(categoria).to.have.property('id');",
+							"        pm.expect(categoria).to.have.property('nome');",
+							"        pm.expect(categoria).to.have.property('tipo');",
+							"        pm.expect(categoria).to.have.property('ativo');",
+							"        pm.expect(categoria).to.have.property('destacada');",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"All returned categories contain the search term (case-insensitive)\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var searchTerm = pm.environment.get(\"categoriaNome\");",
+							"    if (searchTerm && jsonData.length > 0) {",
+							"        jsonData.forEach(function(categoria) {",
+							"            pm.expect(categoria.nome.toLowerCase()).to.include(searchTerm.toLowerCase());",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/nome/{{categoriaNome}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"nome",
+						"{{categoriaNome}}"
+					]
+				},
+				"description": "Busca todas as categorias que contêm parte do nome especificado (busca parcial, case-insensitive).\n\nExemplos:\n- Buscar por 'ali' pode retornar 'Alimentação', 'Salário', etc.\n- Buscar por 'casa' pode retornar 'Casa', 'Casamento', etc.\n\n**Requer autenticação JWT.**\n\n**Nota:** Execute primeiro o endpoint \"01 - Obter Todas as Categorias\" para popular a variável `categoriaNome`, ou defina manualmente um nome válido."
+			},
+			"response": []
+		},
+		{
+			"name": "07 - Buscar Categorias por Nome (Sem Resultados)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an empty array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"    pm.expect(jsonData).to.have.lengthOf(0);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/nome/CategoriaInexistenteXYZ123",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"nome",
+						"CategoriaInexistenteXYZ123"
+					]
+				},
+				"description": "Testa o comportamento quando nenhuma categoria é encontrada com o termo de busca. Deve retornar 200 OK com um array vazio.\n\n**Requer autenticação JWT.**"
+			},
+			"response": []
+		},
+		{
+			"name": "07b - Buscar Categorias por Nome Parcial (Exemplos)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"All returned categories contain 'ali' in name (case-insensitive)\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    if (jsonData.length > 0) {",
+							"        jsonData.forEach(function(categoria) {",
+							"            pm.expect(categoria.nome.toLowerCase()).to.include('ali');",
+							"        });",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Categories are ordered by name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    if (jsonData.length > 1) {",
+							"        for (var i = 1; i < jsonData.length; i++) {",
+							"            pm.expect(jsonData[i].nome >= jsonData[i-1].nome).to.be.true;",
+							"        }",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/nome/ali",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"nome",
+						"ali"
+					]
+				},
+				"description": "Exemplo de busca parcial por 'ali' que pode retornar:\n- Alimentação\n- Salário\n- Qualidade\n- Etc.\n\nA busca é case-insensitive e retorna todas as categorias que contêm o termo em qualquer posição do nome.\n\n**Requer autenticação JWT.**"
+			},
+			"response": []
+		},
+		{
+			"name": "08 - Verificar se Categoria Existe (HEAD - Sucesso)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response body is empty\", function () {",
+							"    pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "HEAD",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/{{categoriaId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"{{categoriaId}}"
+					]
+				},
+				"description": "Verifica se uma categoria existe sem retornar o corpo da resposta. O método HEAD é mais eficiente para verificações de existência.\n\n**Requer autenticação JWT.**\n\n**Nota:** Execute primeiro o endpoint \"01 - Obter Todas as Categorias\" para popular a variável `categoriaId`, ou defina manualmente um GUID válido."
+			},
+			"response": []
+		},
+		{
+			"name": "09 - Verificar se Categoria Existe (HEAD - Não Encontrada)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response body is empty\", function () {",
+							"    pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "HEAD",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				},
+				"description": "Testa o comportamento quando uma categoria não existe (404) usando o método HEAD.\n\n**Requer autenticação JWT.**"
+			},
+			"response": []
+		},
+		{
+			"name": "10 - Teste de Autorização (Sem Token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401 Unauthorized\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Response indicates authentication is required\", function () {",
+							"    // Verifica se a resposta indica falta de autenticação",
+							"    pm.expect(pm.response.code).to.eql(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/Categorias",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"Categorias"
+					]
+				},
+				"description": "Testa o comportamento do endpoint quando nenhum token de autenticação é fornecido. Deve retornar 401 Unauthorized.\n\n**Este teste NÃO usa autenticação propositalmente.**"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:5001",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string",
+			"description": "Token JWT obtido após o login. Execute a coleção de Usuários para obter o token."
+		},
+		{
+			"key": "categoriaId",
+			"value": "",
+			"type": "string",
+			"description": "ID (GUID) de uma categoria válida. Será preenchido automaticamente ao executar o endpoint '01 - Obter Todas as Categorias'."
+		},
+		{
+			"key": "categoriaNome",
+			"value": "Alimentação",
+			"type": "string",
+			"description": "Nome de uma categoria válida. Será preenchido automaticamente ao executar o endpoint '01 - Obter Todas as Categorias'."
+		}
+	]
+}
