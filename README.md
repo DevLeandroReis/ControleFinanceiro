@@ -6,6 +6,35 @@ Uma API RESTful para controle financeiro pessoal implementada seguindo os princí
 
 O projeto está organizado seguindo os princípios do DDD com as seguintes camadas:
 
+```
+ControleFinanceiro/
+??? Domain/                        # Camada de Domínio
+?   ??? Entities/                  # Entidades do negócio
+?   ?   ??? BaseEntity.cs
+?   ?   ??? Categoria.cs
+?   ?   ??? Lancamento.cs
+?   ??? Enums/                     # Enumerações
+?   ?   ??? StatusLancamento.cs
+?   ?   ??? TipoLancamento.cs
+?   ?   ??? TipoRecorrencia.cs
+?   ??? Interfaces/                # Interfaces de repositório
+?       ??? Repositories/
+??? Application/                   # Camada de Aplicação
+?   ??? DTOs/                      # Objetos de transferência
+?   ??? Services/                  # Serviços de aplicação
+?   ??? Interfaces/                # Interfaces dos serviços
+?   ??? Mappings/                  # Perfis do AutoMapper
+??? Infrastructure/                # Camada de Infraestrutura
+?   ??? Data/                      # Acesso a dados
+?       ??? Configurations/        # Configurações EF Core
+?       ??? Repositories/          # Implementação repositórios
+?       ??? ApplicationDbContext.cs
+??? Presentation/                  # Camada de Apresentação
+?   ??? Controllers/               # Controladores da API
+?   ??? Models/                    # Modelos de apresentação
+??? Program.cs                     # Ponto de entrada
+```
+
 ### Domain (Domínio)
 - **Entities**: Entidades principais do negócio (`Categoria`, `Lancamento`)
 - **Enums**: Enumerações (`TipoLancamento`, `StatusLancamento`, `TipoRecorrencia`)
@@ -22,6 +51,7 @@ O projeto está organizado seguindo os princípios do DDD com as seguintes camadas
 
 ### Presentation (Apresentação)
 - **Controllers**: Controladores da API Web
+- **Models**: Modelos específicos da apresentação
 
 ## ?? Tecnologias Utilizadas
 

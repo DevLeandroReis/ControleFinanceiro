@@ -39,11 +39,18 @@ namespace ControleFinanceiro.Infrastructure.Data.Configurations
                 .HasDefaultValue(false);
 
             // Índices
-            builder.HasIndex(x => x.Nome).IsUnique();
+            builder.HasIndex(x => new { x.Nome, x.ContaId }).IsUnique()
+                .HasFilter("[IsDeleted] = 0");
             builder.HasIndex(x => x.Ativo);
             builder.HasIndex(x => x.IsDeleted);
+            builder.HasIndex(x => x.ContaId);
 
             // Relacionamentos
+            builder.HasOne(x => x.Conta)
+                .WithMany(c => c.Categorias)
+                .HasForeignKey(x => x.ContaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasMany(x => x.Lancamentos)
                 .WithOne(x => x.Categoria)
                 .HasForeignKey(x => x.CategoriaId)

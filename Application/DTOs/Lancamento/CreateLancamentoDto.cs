@@ -31,5 +31,8 @@ namespace ControleFinanceiro.Application.DTOs.Lancamento
 
         [Required(ErrorMessage = "A categoria é obrigatória")]
         public Guid CategoriaId { get; set; }
+
+        [Required(ErrorMessage = "A conta é obrigatória")]
+        public Guid ContaId { get; set; }
     }
 }

@@ -21,7 +21,9 @@ namespace ControleFinanceiro.Domain.Entities
         
         // Relacionamentos
         public Guid CategoriaId { get; set; }
+        public Guid ContaId { get; set; }
         public virtual Categoria Categoria { get; set; } = null!;
+        public virtual Conta Conta { get; set; } = null!;
         public virtual Lancamento? LancamentoPai { get; set; }
         public virtual ICollection<Lancamento> LancamentosFilhos { get; set; } = new List<Lancamento>();
 
@@ -32,13 +34,14 @@ namespace ControleFinanceiro.Domain.Entities
             TipoRecorrencia = TipoRecorrencia.Nenhuma;
         }
 
-        public Lancamento(string descricao, decimal valor, DateTime dataVencimento, TipoLancamento tipo, Guid categoriaId) : this()
+        public Lancamento(string descricao, decimal valor, DateTime dataVencimento, TipoLancamento tipo, Guid categoriaId, Guid contaId) : this()
         {
             Descricao = descricao;
             Valor = valor;
             DataVencimento = dataVencimento;
             Tipo = tipo;
             CategoriaId = categoriaId;
+            ContaId = contaId;
         }
 
         public void MarcarComoPago(DateTime? dataPagamento = null)
@@ -82,6 +85,39 @@ namespace ControleFinanceiro.Domain.Entities
             QuantidadeParcelas = null;
             ParcelaAtual = null;
             Update();
+        }
+
+        public bool EhLancamentoPai()
+        {
+            return LancamentoPaiId == null && EhRecorrente;
+        }
+
+        public bool EhLancamentoFilho()
+        {
+            return LancamentoPaiId != null;
+        }
+
+        public void AtualizarDadosBasicos(string descricao, decimal valor, TipoLancamento tipo, Guid categoriaId, Guid contaId, string? observacoes = null)
+        {
+            Descricao = descricao;
+            Valor = valor;
+            Tipo = tipo;
+            CategoriaId = categoriaId;
+            ContaId = contaId;
+            Observacoes = observacoes;
+            Update();
+        }
+
+        public DateTime CalcularProximaDataRecorrencia()
+        {
+            return TipoRecorrencia switch
+            {
+                TipoRecorrencia.Diaria => DataVencimento.AddDays(1),
+                TipoRecorrencia.Semanal => DataVencimento.AddDays(7),
+                TipoRecorrencia.Mensal => DataVencimento.AddMonths(1),
+                TipoRecorrencia.Anual => DataVencimento.AddYears(1),
+                _ => DataVencimento
+            };
         }
     }
 }

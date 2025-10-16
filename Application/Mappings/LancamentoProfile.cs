@@ -9,7 +9,8 @@ namespace ControleFinanceiro.Application.Mappings
         public LancamentoProfile()
         {
             CreateMap<Lancamento, LancamentoDto>()
-                .ForMember(dest => dest.CategoriaNome, opt => opt.MapFrom(src => src.Categoria.Nome));
+                .ForMember(dest => dest.CategoriaNome, opt => opt.MapFrom(src => src.Categoria.Nome))
+                .ForMember(dest => dest.ContaNome, opt => opt.MapFrom(src => src.Conta.Nome));
                 
             CreateMap<CreateLancamentoDto, Lancamento>();
             CreateMap<UpdateLancamentoDto, Lancamento>();

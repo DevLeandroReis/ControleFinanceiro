@@ -30,6 +30,15 @@ namespace ControleFinanceiro.Infrastructure.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Lancamento>> GetLancamentosPorContaAsync(Guid contaId)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.ContaId == contaId)
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Lancamento>> GetLancamentosPorTipoAsync(TipoLancamento tipo)
         {
             return await _dbSet
@@ -100,6 +109,33 @@ namespace ControleFinanceiro.Infrastructure.Data.Repositories
                 .Include(x => x.Categoria)
                 .OrderBy(x => x.DataVencimento)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lancamento>> GetLancamentosFilhosAsync(Guid lancamentoPaiId)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.LancamentoPaiId == lancamentoPaiId)
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lancamento>> GetLancamentosFilhosFuturosAsync(Guid lancamentoPaiId)
+        {
+            var hoje = DateTime.Today;
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.LancamentoPaiId == lancamentoPaiId && x.DataVencimento > hoje)
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
+        public async Task<Lancamento?> GetByIdWithRelacionamentosAsync(Guid id)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Include(x => x.LancamentosFilhos)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

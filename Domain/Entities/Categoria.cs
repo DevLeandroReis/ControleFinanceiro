@@ -6,8 +6,10 @@ namespace ControleFinanceiro.Domain.Entities
         public string? Descricao { get; set; }
         public string? Cor { get; set; }
         public bool Ativo { get; set; }
+        public Guid ContaId { get; set; }
 
         // Relacionamentos
+        public virtual Conta Conta { get; set; } = null!;
         public virtual ICollection<Lancamento> Lancamentos { get; set; } = new List<Lancamento>();
 
         public Categoria()
@@ -15,9 +17,10 @@ namespace ControleFinanceiro.Domain.Entities
             Ativo = true;
         }
 
-        public Categoria(string nome, string? descricao = null, string? cor = null) : this()
+        public Categoria(string nome, Guid contaId, string? descricao = null, string? cor = null) : this()
         {
             Nome = nome;
+            ContaId = contaId;
             Descricao = descricao;
             Cor = cor;
         }

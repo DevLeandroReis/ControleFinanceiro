@@ -12,6 +12,10 @@ namespace ControleFinanceiro.Infrastructure.Data
 
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Lancamento> Lancamentos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Conta> Contas { get; set; }
+        public DbSet<UsuarioConta> UsuarioContas { get; set; }
+        public DbSet<SolicitacaoAcessoConta> SolicitacoesAcessoConta { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

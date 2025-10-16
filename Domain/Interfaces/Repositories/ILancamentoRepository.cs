@@ -7,6 +7,7 @@ namespace ControleFinanceiro.Domain.Interfaces.Repositories
     {
         Task<IEnumerable<Lancamento>> GetLancamentosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim);
         Task<IEnumerable<Lancamento>> GetLancamentosPorCategoriaAsync(Guid categoriaId);
+        Task<IEnumerable<Lancamento>> GetLancamentosPorContaAsync(Guid contaId);
         Task<IEnumerable<Lancamento>> GetLancamentosPorTipoAsync(TipoLancamento tipo);
         Task<IEnumerable<Lancamento>> GetLancamentosPorStatusAsync(StatusLancamento status);
         Task<IEnumerable<Lancamento>> GetLancamentosVencidosAsync();
@@ -15,5 +16,8 @@ namespace ControleFinanceiro.Domain.Interfaces.Repositories
         Task<decimal> GetTotalReceitasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim);
         Task<decimal> GetTotalDespesasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim);
         Task<IEnumerable<Lancamento>> GetLancamentosComCategoriaAsync();
+        Task<IEnumerable<Lancamento>> GetLancamentosFilhosAsync(Guid lancamentoPaiId);
+        Task<IEnumerable<Lancamento>> GetLancamentosFilhosFuturosAsync(Guid lancamentoPaiId);
+        Task<Lancamento?> GetByIdWithRelacionamentosAsync(Guid id);
     }
 }

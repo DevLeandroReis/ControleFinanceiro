@@ -19,6 +19,8 @@ namespace ControleFinanceiro.Application.DTOs.Lancamento
         public Guid? LancamentoPaiId { get; set; }
         public Guid CategoriaId { get; set; }
         public string? CategoriaNome { get; set; }
+        public Guid ContaId { get; set; }
+        public string? ContaNome { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

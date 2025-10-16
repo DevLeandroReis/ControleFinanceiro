@@ -1,12 +1,14 @@
 using ControleFinanceiro.Application.DTOs.Categoria;
 using ControleFinanceiro.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ControleFinanceiro.Controllers
+namespace ControleFinanceiro.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize]
     public class CategoriasController : ControllerBase
     {
         private readonly ICategoriaService _categoriaService;

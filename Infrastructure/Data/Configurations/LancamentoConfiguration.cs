@@ -56,6 +56,9 @@ namespace ControleFinanceiro.Infrastructure.Data.Configurations
             builder.Property(x => x.CategoriaId)
                 .IsRequired();
 
+            builder.Property(x => x.ContaId)
+                .IsRequired();
+
             builder.Property(x => x.CreatedAt)
                 .IsRequired()
                 .HasColumnType("timestamp with time zone");
@@ -74,6 +77,7 @@ namespace ControleFinanceiro.Infrastructure.Data.Configurations
             builder.HasIndex(x => x.Tipo);
             builder.HasIndex(x => x.Status);
             builder.HasIndex(x => x.CategoriaId);
+            builder.HasIndex(x => x.ContaId);
             builder.HasIndex(x => x.EhRecorrente);
             builder.HasIndex(x => x.LancamentoPaiId);
             builder.HasIndex(x => x.IsDeleted);
@@ -82,6 +86,11 @@ namespace ControleFinanceiro.Infrastructure.Data.Configurations
             builder.HasOne(x => x.Categoria)
                 .WithMany(x => x.Lancamentos)
                 .HasForeignKey(x => x.CategoriaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Conta)
+                .WithMany(c => c.Lancamentos)
+                .HasForeignKey(x => x.ContaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.LancamentoPai)
