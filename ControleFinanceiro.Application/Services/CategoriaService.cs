@@ -28,6 +28,12 @@ namespace ControleFinanceiro.Application.Services
             return _mapper.Map<IEnumerable<CategoriaDto>>(categorias);
         }
 
+        public async Task<IEnumerable<CategoriaDto>> GetCategoriasDestacadasAsync()
+        {
+            var categorias = await _categoriaRepository.GetCategoriasDestacadasAsync();
+            return _mapper.Map<IEnumerable<CategoriaDto>>(categorias);
+        }
+
         public async Task<CategoriaDto?> GetByIdAsync(Guid id)
         {
             var categoria = await _categoriaRepository.GetByIdAsync(id);

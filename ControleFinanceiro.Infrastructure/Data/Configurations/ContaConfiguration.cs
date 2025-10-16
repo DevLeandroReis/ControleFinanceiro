@@ -35,11 +35,6 @@ namespace ControleFinanceiro.Infrastructure.Data.Configurations
                 .HasForeignKey(l => l.ContaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(c => c.Categorias)
-                .WithOne(cat => cat.Conta)
-                .HasForeignKey(cat => cat.ContaId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasMany(c => c.Solicitacoes)
                 .WithOne(s => s.Conta)
                 .HasForeignKey(s => s.ContaId)

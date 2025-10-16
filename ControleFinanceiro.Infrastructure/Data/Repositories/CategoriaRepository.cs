@@ -19,6 +19,14 @@ namespace ControleFinanceiro.Infrastructure.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Categoria>> GetCategoriasDestacadasAsync()
+        {
+            return await _dbSet
+                .Where(x => x.Ativo && x.Destacada)
+                .OrderBy(x => x.Nome)
+                .ToListAsync();
+        }
+
         public async Task<Categoria?> GetByNomeAsync(string nome)
         {
             return await _dbSet

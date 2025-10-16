@@ -3,6 +3,7 @@ using System;
 using ControleFinanceiro.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ControleFinanceiro.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251016201430_AdicionarTipoCategoriaEmCategoria")]
+    partial class AdicionarTipoCategoriaEmCategoria
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,6 +35,9 @@ namespace ControleFinanceiro.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
+
+                    b.Property<Guid>("ContaId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Cor")
                         .HasMaxLength(7)
@@ -69,15 +75,17 @@ namespace ControleFinanceiro.Migrations
 
                     b.HasIndex("Ativo");
 
+                    b.HasIndex("ContaId");
+
                     b.HasIndex("Destacada");
 
                     b.HasIndex("IsDeleted");
 
-                    b.HasIndex("Nome")
+                    b.HasIndex("Tipo");
+
+                    b.HasIndex("Nome", "ContaId")
                         .IsUnique()
                         .HasFilter("\"IsDeleted\" = false");
-
-                    b.HasIndex("Tipo");
 
                     b.ToTable("Categorias", (string)null);
                 });
@@ -355,6 +363,17 @@ namespace ControleFinanceiro.Migrations
                     b.ToTable("UsuarioContas", (string)null);
                 });
 
+            modelBuilder.Entity("ControleFinanceiro.Domain.Entities.Categoria", b =>
+                {
+                    b.HasOne("ControleFinanceiro.Domain.Entities.Conta", "Conta")
+                        .WithMany("Categorias")
+                        .HasForeignKey("ContaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Conta");
+                });
+
             modelBuilder.Entity("ControleFinanceiro.Domain.Entities.Conta", b =>
                 {
                     b.HasOne("ControleFinanceiro.Domain.Entities.Usuario", "Proprietario")
@@ -445,6 +464,8 @@ namespace ControleFinanceiro.Migrations
 
             modelBuilder.Entity("ControleFinanceiro.Domain.Entities.Conta", b =>
                 {
+                    b.Navigation("Categorias");
+
                     b.Navigation("Lancamentos");
 
                     b.Navigation("Solicitacoes");

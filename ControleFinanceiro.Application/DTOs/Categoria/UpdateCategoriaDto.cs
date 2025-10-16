@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ControleFinanceiro.Domain.Enums;
 
 namespace ControleFinanceiro.Application.DTOs.Categoria
 {
@@ -15,6 +16,11 @@ namespace ControleFinanceiro.Application.DTOs.Categoria
         [RegularExpression(@"^#[0-9A-Fa-f]{6}$", ErrorMessage = "A cor deve estar no formato hexadecimal (#FFFFFF)")]
         public string? Cor { get; set; }
 
+        [Required(ErrorMessage = "O tipo é obrigatório")]
+        public TipoCategoria Tipo { get; set; }
+
         public bool Ativo { get; set; } = true;
+
+        public bool Destacada { get; set; } = false;
     }
 }

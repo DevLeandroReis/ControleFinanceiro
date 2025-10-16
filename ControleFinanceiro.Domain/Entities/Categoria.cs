@@ -1,3 +1,5 @@
+using ControleFinanceiro.Domain.Enums;
+
 namespace ControleFinanceiro.Domain.Entities
 {
     public class Categoria : BaseEntity
@@ -6,27 +8,30 @@ namespace ControleFinanceiro.Domain.Entities
         public string? Descricao { get; set; }
         public string? Cor { get; set; }
         public bool Ativo { get; set; }
-        public Guid ContaId { get; set; }
+        public bool Destacada { get; set; }
+        public TipoCategoria Tipo { get; set; }
 
         // Relacionamentos
-        public virtual Conta Conta { get; set; } = null!;
         public virtual ICollection<Lancamento> Lancamentos { get; set; } = new List<Lancamento>();
 
         public Categoria()
         {
             Ativo = true;
+            Destacada = false;
         }
 
-        public Categoria(string nome, Guid contaId, string? descricao = null, string? cor = null) : this()
+        public Categoria(string nome, TipoCategoria tipo, string? descricao = null, string? cor = null) : this()
         {
             Nome = nome;
-            ContaId = contaId;
+            Tipo = tipo;
             Descricao = descricao;
             Cor = cor;
         }
 
         public void Ativar() => Ativo = true;
         public void Desativar() => Ativo = false;
+        public void MarcarComoDestacada() => Destacada = true;
+        public void DesmarcarComoDestacada() => Destacada = false;
         
         public void AlterarNome(string nome)
         {

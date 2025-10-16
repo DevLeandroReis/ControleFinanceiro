@@ -59,6 +59,25 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
+        /// Obter apenas categorias destacadas (principais/favoritas)
+        /// </summary>
+        [HttpGet("destacadas")]
+        [ProducesResponseType(typeof(IEnumerable<CategoriaDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CategoriaDto>>> GetDestacadas()
+        {
+            try
+            {
+                var categorias = await _categoriaService.GetCategoriasDestacadasAsync();
+                return Ok(categorias);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter categorias destacadas");
+                return StatusCode(500, "Erro interno do servidor");
+            }
+        }
+
+        /// <summary>
         /// Obter categoria por ID
         /// </summary>
         [HttpGet("{id:guid}")]
