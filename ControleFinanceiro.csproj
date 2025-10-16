@@ -33,4 +33,11 @@
     <Folder Include="Presentation\Models\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="ControleFinanceiro.Application\ControleFinanceiro.Application.csproj" />
+    <None Include="ControleFinanceiro.Domain\ControleFinanceiro.Domain.csproj" />
+    <None Include="ControleFinanceiro.Infrastructure\ControleFinanceiro.Infrastructure.csproj" />
+    <None Include="ControleFinanceiro.Presentation\ControleFinanceiro.Presentation.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -4,54 +4,64 @@ Uma API RESTful para controle financeiro pessoal implementada seguindo os princí
 
 ## ??? Arquitetura
 
-O projeto está organizado seguindo os princípios do DDD com as seguintes camadas:
+O projeto está organizado seguindo os princípios do DDD e Clean Architecture com **4 projetos separados**:
 
 ```
 ControleFinanceiro/
-??? Domain/                        # Camada de Domínio
-?   ??? Entities/                  # Entidades do negócio
+??? ControleFinanceiro.Domain/           # Camada de Domínio
+?   ??? Entities/                        # Entidades do negócio
 ?   ?   ??? BaseEntity.cs
 ?   ?   ??? Categoria.cs
 ?   ?   ??? Lancamento.cs
-?   ??? Enums/                     # Enumerações
+?   ?   ??? Usuario.cs
+?   ?   ??? Conta.cs
+?   ??? Enums/                           # Enumerações
 ?   ?   ??? StatusLancamento.cs
 ?   ?   ??? TipoLancamento.cs
 ?   ?   ??? TipoRecorrencia.cs
-?   ??? Interfaces/                # Interfaces de repositório
+?   ??? Interfaces/                      # Interfaces de repositório
 ?       ??? Repositories/
-??? Application/                   # Camada de Aplicação
-?   ??? DTOs/                      # Objetos de transferência
-?   ??? Services/                  # Serviços de aplicação
-?   ??? Interfaces/                # Interfaces dos serviços
-?   ??? Mappings/                  # Perfis do AutoMapper
-??? Infrastructure/                # Camada de Infraestrutura
-?   ??? Data/                      # Acesso a dados
-?       ??? Configurations/        # Configurações EF Core
-?       ??? Repositories/          # Implementação repositórios
-?       ??? ApplicationDbContext.cs
-??? Presentation/                  # Camada de Apresentação
-?   ??? Controllers/               # Controladores da API
-?   ??? Models/                    # Modelos de apresentação
-??? Program.cs                     # Ponto de entrada
+??? ControleFinanceiro.Application/      # Camada de Aplicação
+?   ??? DTOs/                            # Objetos de transferência
+?   ??? Services/                        # Serviços de aplicação
+?   ??? Interfaces/                      # Interfaces dos serviços
+?   ??? Mappings/                        # Perfis do AutoMapper
+??? ControleFinanceiro.Infrastructure/   # Camada de Infraestrutura
+?   ??? Data/                            # Acesso a dados
+?   ?   ??? Configurations/              # Configurações EF Core
+?   ?   ??? Repositories/                # Implementação repositórios
+?   ?   ??? ApplicationDbContext.cs
+?   ??? Migrations/                      # Migrações do banco
+??? ControleFinanceiro.Presentation/     # Camada de Apresentação (API)
+    ??? Controllers/                     # Controladores da API
+    ??? Extensions/                      # Extensões úteis
+    ??? Program.cs                       # Ponto de entrada
 ```
 
-### Domain (Domínio)
-- **Entities**: Entidades principais do negócio (`Categoria`, `Lancamento`)
+### ?? ControleFinanceiro.Domain
+**Não possui dependências externas**
+- **Entities**: Entidades principais do negócio (`Categoria`, `Lancamento`, `Usuario`, `Conta`)
 - **Enums**: Enumerações (`TipoLancamento`, `StatusLancamento`, `TipoRecorrencia`)
 - **Interfaces**: Contratos dos repositórios
 
-### Infrastructure (Infraestrutura)
+### ?? ControleFinanceiro.Infrastructure
+**Dependências**: Domain, Application
 - **Data**: Contexto do Entity Framework e configurações
 - **Repositories**: Implementação dos repositórios
+- **Migrations**: Migrações do Entity Framework
 
-### Application (Aplicação)
+### ?? ControleFinanceiro.Application
+**Dependências**: Domain
 - **DTOs**: Objetos de transferência de dados
-- **Services**: Serviços de aplicação
+- **Services**: Serviços de aplicação com regras de negócio
 - **Mappings**: Perfis do AutoMapper
+- **Interfaces**: Contratos dos serviços
 
-### Presentation (Apresentação)
+### ?? ControleFinanceiro.Presentation
+**Dependências**: Domain, Application, Infrastructure
 - **Controllers**: Controladores da API Web
-- **Models**: Modelos específicos da apresentação
+- **Extensions**: Métodos de extensão (ex: ClaimsPrincipal)
+- **Program.cs**: Configuração e injeção de dependências
 
 ## ?? Tecnologias Utilizadas
 

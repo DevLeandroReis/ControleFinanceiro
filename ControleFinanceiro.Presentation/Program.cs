@@ -83,7 +83,12 @@ namespace ControleFinanceiro
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Configurar AutoMapper
-            builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddAutoMapper(
+                typeof(Program),
+                typeof(ControleFinanceiro.Application.Mappings.CategoriaProfile),
+                typeof(ControleFinanceiro.Application.Mappings.LancamentoProfile),
+                typeof(ControleFinanceiro.Application.Mappings.UsuarioProfile),
+                typeof(ControleFinanceiro.Application.Mappings.ContaProfile));
 
             // Configurar Autenticação JWT
             var jwtSettings = builder.Configuration.GetSection("JWT");
