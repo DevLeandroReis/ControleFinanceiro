@@ -66,18 +66,6 @@ namespace ControleFinanceiro.Domain.Entities
             Update();
         }
 
-        public void Ativar()
-        {
-            Ativo = true;
-            Update();
-        }
-
-        public void Desativar()
-        {
-            Ativo = false;
-            Update();
-        }
-
         public bool PodeRecuperarSenha()
         {
             return !string.IsNullOrEmpty(TokenRecuperacaoSenha) &&

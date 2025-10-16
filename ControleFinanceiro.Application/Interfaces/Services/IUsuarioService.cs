@@ -11,8 +11,5 @@ namespace ControleFinanceiro.Application.Interfaces.Services
         Task<bool> ConfirmarEmailAsync(string token);
         Task<UsuarioDto?> GetByIdAsync(Guid id);
         Task<UsuarioDto?> GetByEmailAsync(string email);
-        Task<IEnumerable<UsuarioDto>> GetAllAsync();
-        Task<bool> AtivarAsync(Guid id);
-        Task<bool> DesativarAsync(Guid id);
     }
 }

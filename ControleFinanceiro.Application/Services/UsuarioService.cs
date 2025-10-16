@@ -142,41 +142,5 @@ namespace ControleFinanceiro.Application.Services
             var usuario = await _usuarioRepository.GetByEmailAsync(email);
             return usuario == null ? null : _mapper.Map<UsuarioDto>(usuario);
         }
-
-        public async Task<IEnumerable<UsuarioDto>> GetAllAsync()
-        {
-            var usuarios = await _usuarioRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<UsuarioDto>>(usuarios);
-        }
-
-        public async Task<bool> AtivarAsync(Guid id)
-        {
-            var usuario = await _usuarioRepository.GetByIdAsync(id);
-            
-            if (usuario == null)
-            {
-                return false;
-            }
-
-            usuario.Ativar();
-            await _usuarioRepository.UpdateAsync(usuario);
-            
-            return true;
-        }
-
-        public async Task<bool> DesativarAsync(Guid id)
-        {
-            var usuario = await _usuarioRepository.GetByIdAsync(id);
-            
-            if (usuario == null)
-            {
-                return false;
-            }
-
-            usuario.Desativar();
-            await _usuarioRepository.UpdateAsync(usuario);
-            
-            return true;
-        }
     }
 }
