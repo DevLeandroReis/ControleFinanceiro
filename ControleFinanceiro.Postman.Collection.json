@@ -1,0 +1,480 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+		"name": "Controle Financeiro - Usuarios API",
+		"description": "Coleção de testes para todas as rotas do UsuariosController",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01 - Registrar Novo Usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 201) {",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"usuario_id\", jsonData.id);",
+							"    pm.test(\"Status code is 201\", function () {",
+							"        pm.response.to.have.status(201);",
+							"    });",
+							"    pm.test(\"Usuario criado com sucesso\", function () {",
+							"        pm.expect(jsonData).to.have.property('id');",
+							"        pm.expect(jsonData).to.have.property('nome');",
+							"        pm.expect(jsonData).to.have.property('email');",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João da Silva\",\n  \"email\": \"joao.silva@example.com\",\n  \"senha\": \"Senha@123\",\n  \"confirmarSenha\": \"Senha@123\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/registrar",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"registrar"
+					]
+				},
+				"description": "Registra um novo usuário no sistema. Não requer autenticação."
+			},
+			"response": []
+		},
+		{
+			"name": "02 - Login de Usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"auth_token\", jsonData.token);",
+							"    pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"    });",
+							"    pm.test(\"Token recebido com sucesso\", function () {",
+							"        pm.expect(jsonData).to.have.property('token');",
+							"        pm.expect(jsonData).to.have.property('usuario');",
+							"        pm.expect(jsonData).to.have.property('expiresAt');",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"joao.silva@example.com\",\n  \"senha\": \"Senha@123\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"login"
+					]
+				},
+				"description": "Realiza login de um usuário e retorna o token JWT. Não requer autenticação."
+			},
+			"response": []
+		},
+		{
+			"name": "03 - Recuperar Senha",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Mensagem de recuperação enviada\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"joao.silva@example.com\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/recuperar-senha",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"recuperar-senha"
+					]
+				},
+				"description": "Envia um email com instruções para recuperação de senha. Não requer autenticação."
+			},
+			"response": []
+		},
+		{
+			"name": "04 - Redefinir Senha",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Senha redefinida com sucesso\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"    pm.expect(jsonData.message).to.eql('Senha redefinida com sucesso');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"token\": \"SEU_TOKEN_AQUI\",\n  \"novaSenha\": \"NovaSenha@123\",\n  \"confirmarNovaSenha\": \"NovaSenha@123\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/redefinir-senha",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"redefinir-senha"
+					]
+				},
+				"description": "Redefine a senha do usuário usando o token recebido por email. Não requer autenticação."
+			},
+			"response": []
+		},
+		{
+			"name": "05 - Confirmar Email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Email confirmado com sucesso\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"    pm.expect(jsonData.message).to.eql('Email confirmado com sucesso');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/confirmar-email?token=SEU_TOKEN_AQUI",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"confirmar-email"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "SEU_TOKEN_AQUI"
+						}
+					]
+				},
+				"description": "Confirma o email do usuário usando o token recebido. Não requer autenticação."
+			},
+			"response": []
+		},
+		{
+			"name": "06 - Obter Usuário por ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Usuário retornado com sucesso\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('nome');",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"    pm.expect(jsonData).to.have.property('ativo');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/{{usuario_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"{{usuario_id}}"
+					]
+				},
+				"description": "Obtém os dados de um usuário específico pelo ID. Requer autenticação."
+			},
+			"response": []
+		},
+		{
+			"name": "07 - Obter Todos os Usuários",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Lista de usuários retornada\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/usuarios",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios"
+					]
+				},
+				"description": "Obtém a lista de todos os usuários cadastrados. Requer autenticação."
+			},
+			"response": []
+		},
+		{
+			"name": "08 - Ativar Usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Usuário ativado com sucesso\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"    pm.expect(jsonData.message).to.eql('Usuário ativado com sucesso');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/{{usuario_id}}/ativar",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"{{usuario_id}}",
+						"ativar"
+					]
+				},
+				"description": "Ativa um usuário que estava desativado. Requer autenticação."
+			},
+			"response": []
+		},
+		{
+			"name": "09 - Desativar Usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Usuário desativado com sucesso\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"    pm.expect(jsonData.message).to.eql('Usuário desativado com sucesso');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/{{usuario_id}}/desativar",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"{{usuario_id}}",
+						"desativar"
+					]
+				},
+				"description": "Desativa um usuário. Requer autenticação."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:5001",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "usuario_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
