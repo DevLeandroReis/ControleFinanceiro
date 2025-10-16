@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleFinanceiro.Infrastructure.Data.Repositories
 {
-    public class CategoriaRepository : BaseRepository<Categoria>, ICategoriaRepository
+    public class CategoriaRepository : ReadOnlyRepository<Categoria>, ICategoriaRepository
     {
         public CategoriaRepository(ApplicationDbContext context) : base(context)
         {
@@ -23,18 +23,6 @@ namespace ControleFinanceiro.Infrastructure.Data.Repositories
         {
             return await _dbSet
                 .FirstOrDefaultAsync(x => x.Nome.ToLower() == nome.ToLower());
-        }
-
-        public async Task<bool> NomeJaExisteAsync(string nome, Guid? excludeId = null)
-        {
-            var query = _dbSet.Where(x => x.Nome.ToLower() == nome.ToLower());
-            
-            if (excludeId.HasValue)
-            {
-                query = query.Where(x => x.Id != excludeId.Value);
-            }
-
-            return await query.AnyAsync();
         }
     }
 }

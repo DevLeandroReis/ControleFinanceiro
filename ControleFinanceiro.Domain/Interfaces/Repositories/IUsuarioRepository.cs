@@ -8,6 +8,5 @@ namespace ControleFinanceiro.Domain.Interfaces.Repositories
         Task<bool> ExisteEmailAsync(string email);
         Task<Usuario?> GetByTokenConfirmacaoEmailAsync(string token);
         Task<Usuario?> GetByTokenRecuperacaoSenhaAsync(string token);
-        Task<IEnumerable<Usuario>> GetByContaIdAsync(Guid contaId);
     }
 }

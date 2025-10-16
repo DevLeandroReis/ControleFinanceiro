@@ -36,12 +36,5 @@ namespace ControleFinanceiro.Infrastructure.Data.Repositories
                                        u.TokenRecuperacaoExpira > DateTime.UtcNow && 
                                        !u.IsDeleted);
         }
-
-        public async Task<IEnumerable<Usuario>> GetByContaIdAsync(Guid contaId)
-        {
-            return await _context.Usuarios
-                .Where(u => u.UsuarioContas.Any(uc => uc.ContaId == contaId && uc.Ativo) && !u.IsDeleted)
-                .ToListAsync();
-        }
     }
 }
