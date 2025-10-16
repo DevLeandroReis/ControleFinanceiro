@@ -74,14 +74,16 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter lançamentos por período
+        /// Obter lançamentos por período e contas
         /// </summary>
         [HttpGet("periodo")]
         [ProducesResponseType(typeof(IEnumerable<LancamentoDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetPorPeriodo(
             [FromQuery] DateTime dataInicio, 
-            [FromQuery] DateTime dataFim)
+            [FromQuery] DateTime dataFim,
+            [FromQuery] List<Guid> contaIds)
         {
             try
             {
@@ -90,9 +92,22 @@ namespace ControleFinanceiro.Presentation.Controllers
                     return BadRequest("A data de início deve ser anterior à data de fim");
                 }
 
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var lancamentos = await _lancamentoService.GetLancamentosPorPeriodoAsync(dataInicio, dataFim, usuarioId);
+                var lancamentos = await _lancamentoService.GetLancamentosPorPeriodoAsync(dataInicio, dataFim, contaIds, usuarioId);
                 return Ok(lancamentos);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -102,17 +117,34 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter lançamentos por categoria
+        /// Obter lançamentos por categoria e contas
         /// </summary>
         [HttpGet("categoria/{categoriaId:guid}")]
         [ProducesResponseType(typeof(IEnumerable<LancamentoDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetPorCategoria(Guid categoriaId)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetPorCategoria(
+            Guid categoriaId,
+            [FromQuery] List<Guid> contaIds)
         {
             try
             {
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var lancamentos = await _lancamentoService.GetLancamentosPorCategoriaAsync(categoriaId, usuarioId);
+                var lancamentos = await _lancamentoService.GetLancamentosPorCategoriaAsync(categoriaId, contaIds, usuarioId);
                 return Ok(lancamentos);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -147,17 +179,34 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter lançamentos por tipo
+        /// Obter lançamentos por tipo e contas
         /// </summary>
         [HttpGet("tipo/{tipo}")]
         [ProducesResponseType(typeof(IEnumerable<LancamentoDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetPorTipo(TipoLancamento tipo)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetPorTipo(
+            TipoLancamento tipo,
+            [FromQuery] List<Guid> contaIds)
         {
             try
             {
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var lancamentos = await _lancamentoService.GetLancamentosPorTipoAsync(tipo, usuarioId);
+                var lancamentos = await _lancamentoService.GetLancamentosPorTipoAsync(tipo, contaIds, usuarioId);
                 return Ok(lancamentos);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -167,17 +216,34 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter lançamentos por status
+        /// Obter lançamentos por status e contas
         /// </summary>
         [HttpGet("status/{status}")]
         [ProducesResponseType(typeof(IEnumerable<LancamentoDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetPorStatus(StatusLancamento status)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetPorStatus(
+            StatusLancamento status,
+            [FromQuery] List<Guid> contaIds)
         {
             try
             {
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var lancamentos = await _lancamentoService.GetLancamentosPorStatusAsync(status, usuarioId);
+                var lancamentos = await _lancamentoService.GetLancamentosPorStatusAsync(status, contaIds, usuarioId);
                 return Ok(lancamentos);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -187,17 +253,32 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter lançamentos vencidos
+        /// Obter lançamentos vencidos por contas
         /// </summary>
         [HttpGet("vencidos")]
         [ProducesResponseType(typeof(IEnumerable<LancamentoDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetVencidos()
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetVencidos([FromQuery] List<Guid> contaIds)
         {
             try
             {
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var lancamentos = await _lancamentoService.GetLancamentosVencidosAsync(usuarioId);
+                var lancamentos = await _lancamentoService.GetLancamentosVencidosAsync(contaIds, usuarioId);
                 return Ok(lancamentos);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -207,17 +288,32 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter lançamentos recorrentes
+        /// Obter lançamentos recorrentes por contas
         /// </summary>
         [HttpGet("recorrentes")]
         [ProducesResponseType(typeof(IEnumerable<LancamentoDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetRecorrentes()
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<IEnumerable<LancamentoDto>>> GetRecorrentes([FromQuery] List<Guid> contaIds)
         {
             try
             {
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var lancamentos = await _lancamentoService.GetLancamentosRecorrentesAsync(usuarioId);
+                var lancamentos = await _lancamentoService.GetLancamentosRecorrentesAsync(contaIds, usuarioId);
                 return Ok(lancamentos);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -227,14 +323,16 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter saldo por período
+        /// Obter saldo por período e contas
         /// </summary>
         [HttpGet("saldo")]
         [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<decimal>> GetSaldoPorPeriodo(
             [FromQuery] DateTime dataInicio, 
-            [FromQuery] DateTime dataFim)
+            [FromQuery] DateTime dataFim,
+            [FromQuery] List<Guid> contaIds)
         {
             try
             {
@@ -243,9 +341,22 @@ namespace ControleFinanceiro.Presentation.Controllers
                     return BadRequest("A data de início deve ser anterior à data de fim");
                 }
 
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var saldo = await _lancamentoService.GetSaldoPorPeriodoAsync(dataInicio, dataFim, usuarioId);
+                var saldo = await _lancamentoService.GetSaldoPorPeriodoAsync(dataInicio, dataFim, contaIds, usuarioId);
                 return Ok(saldo);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -255,14 +366,16 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter total de receitas por período
+        /// Obter total de receitas por período e contas
         /// </summary>
         [HttpGet("receitas/total")]
         [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<decimal>> GetTotalReceitasPorPeriodo(
             [FromQuery] DateTime dataInicio, 
-            [FromQuery] DateTime dataFim)
+            [FromQuery] DateTime dataFim,
+            [FromQuery] List<Guid> contaIds)
         {
             try
             {
@@ -271,9 +384,22 @@ namespace ControleFinanceiro.Presentation.Controllers
                     return BadRequest("A data de início deve ser anterior à data de fim");
                 }
 
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var total = await _lancamentoService.GetTotalReceitasPorPeriodoAsync(dataInicio, dataFim, usuarioId);
+                var total = await _lancamentoService.GetTotalReceitasPorPeriodoAsync(dataInicio, dataFim, contaIds, usuarioId);
                 return Ok(total);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -283,14 +409,16 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
-        /// Obter total de despesas por período
+        /// Obter total de despesas por período e contas
         /// </summary>
         [HttpGet("despesas/total")]
         [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<decimal>> GetTotalDespesasPorPeriodo(
             [FromQuery] DateTime dataInicio, 
-            [FromQuery] DateTime dataFim)
+            [FromQuery] DateTime dataFim,
+            [FromQuery] List<Guid> contaIds)
         {
             try
             {
@@ -299,9 +427,22 @@ namespace ControleFinanceiro.Presentation.Controllers
                     return BadRequest("A data de início deve ser anterior à data de fim");
                 }
 
+                if (contaIds == null || !contaIds.Any())
+                {
+                    return BadRequest("É necessário informar pelo menos uma conta");
+                }
+
                 var usuarioId = User.GetUserId();
-                var total = await _lancamentoService.GetTotalDespesasPorPeriodoAsync(dataInicio, dataFim, usuarioId);
+                var total = await _lancamentoService.GetTotalDespesasPorPeriodoAsync(dataInicio, dataFim, contaIds, usuarioId);
                 return Ok(total);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

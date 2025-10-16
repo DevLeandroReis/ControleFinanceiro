@@ -19,5 +19,14 @@ namespace ControleFinanceiro.Domain.Interfaces.Repositories
         Task<IEnumerable<Lancamento>> GetLancamentosFilhosAsync(Guid lancamentoPaiId);
         Task<IEnumerable<Lancamento>> GetLancamentosFilhosFuturosAsync(Guid lancamentoPaiId);
         Task<Lancamento?> GetByIdWithRelacionamentosAsync(Guid id);
+        
+        // Novos métodos que recebem lista de contas
+        Task<IEnumerable<Lancamento>> GetLancamentosPorPeriodoEContasAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds);
+        Task<IEnumerable<Lancamento>> GetLancamentosPorCategoriaEContasAsync(Guid categoriaId, IEnumerable<Guid> contaIds);
+        Task<IEnumerable<Lancamento>> GetLancamentosPorTipoEContasAsync(TipoLancamento tipo, IEnumerable<Guid> contaIds);
+        Task<IEnumerable<Lancamento>> GetLancamentosPorStatusEContasAsync(StatusLancamento status, IEnumerable<Guid> contaIds);
+        Task<IEnumerable<Lancamento>> GetLancamentosVencidosPorContasAsync(IEnumerable<Guid> contaIds);
+        Task<IEnumerable<Lancamento>> GetLancamentosRecorrentesPorContasAsync(IEnumerable<Guid> contaIds);
+        Task<IEnumerable<Lancamento>> GetLancamentosPorContasAsync(IEnumerable<Guid> contaIds);
     }
 }

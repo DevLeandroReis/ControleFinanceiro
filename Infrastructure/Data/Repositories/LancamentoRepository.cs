@@ -137,5 +137,70 @@ namespace ControleFinanceiro.Infrastructure.Data.Repositories
                 .Include(x => x.LancamentosFilhos)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        // Novos métodos que recebem lista de contas
+        public async Task<IEnumerable<Lancamento>> GetLancamentosPorPeriodoEContasAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.DataVencimento >= dataInicio && x.DataVencimento <= dataFim && contaIds.Contains(x.ContaId))
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lancamento>> GetLancamentosPorCategoriaEContasAsync(Guid categoriaId, IEnumerable<Guid> contaIds)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.CategoriaId == categoriaId && contaIds.Contains(x.ContaId))
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lancamento>> GetLancamentosPorTipoEContasAsync(TipoLancamento tipo, IEnumerable<Guid> contaIds)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.Tipo == tipo && contaIds.Contains(x.ContaId))
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lancamento>> GetLancamentosPorStatusEContasAsync(StatusLancamento status, IEnumerable<Guid> contaIds)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.Status == status && contaIds.Contains(x.ContaId))
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lancamento>> GetLancamentosVencidosPorContasAsync(IEnumerable<Guid> contaIds)
+        {
+            var hoje = DateTime.Today;
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.Status == StatusLancamento.Pendente && x.DataVencimento < hoje && contaIds.Contains(x.ContaId))
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lancamento>> GetLancamentosRecorrentesPorContasAsync(IEnumerable<Guid> contaIds)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => x.EhRecorrente && contaIds.Contains(x.ContaId))
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lancamento>> GetLancamentosPorContasAsync(IEnumerable<Guid> contaIds)
+        {
+            return await _dbSet
+                .Include(x => x.Categoria)
+                .Where(x => contaIds.Contains(x.ContaId))
+                .OrderBy(x => x.DataVencimento)
+                .ToListAsync();
+        }
     }
 }

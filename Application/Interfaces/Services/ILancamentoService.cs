@@ -7,15 +7,15 @@ namespace ControleFinanceiro.Application.Interfaces.Services
     {
         Task<IEnumerable<LancamentoDto>> GetAllAsync(Guid usuarioId);
         Task<LancamentoDto?> GetByIdAsync(Guid id, Guid usuarioId);
-        Task<IEnumerable<LancamentoDto>> GetLancamentosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, Guid usuarioId);
-        Task<IEnumerable<LancamentoDto>> GetLancamentosPorCategoriaAsync(Guid categoriaId, Guid usuarioId);
-        Task<IEnumerable<LancamentoDto>> GetLancamentosPorTipoAsync(TipoLancamento tipo, Guid usuarioId);
-        Task<IEnumerable<LancamentoDto>> GetLancamentosPorStatusAsync(StatusLancamento status, Guid usuarioId);
-        Task<IEnumerable<LancamentoDto>> GetLancamentosVencidosAsync(Guid usuarioId);
-        Task<IEnumerable<LancamentoDto>> GetLancamentosRecorrentesAsync(Guid usuarioId);
-        Task<decimal> GetSaldoPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, Guid usuarioId);
-        Task<decimal> GetTotalReceitasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, Guid usuarioId);
-        Task<decimal> GetTotalDespesasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, Guid usuarioId);
+        Task<IEnumerable<LancamentoDto>> GetLancamentosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds, Guid usuarioId);
+        Task<IEnumerable<LancamentoDto>> GetLancamentosPorCategoriaAsync(Guid categoriaId, IEnumerable<Guid> contaIds, Guid usuarioId);
+        Task<IEnumerable<LancamentoDto>> GetLancamentosPorTipoAsync(TipoLancamento tipo, IEnumerable<Guid> contaIds, Guid usuarioId);
+        Task<IEnumerable<LancamentoDto>> GetLancamentosPorStatusAsync(StatusLancamento status, IEnumerable<Guid> contaIds, Guid usuarioId);
+        Task<IEnumerable<LancamentoDto>> GetLancamentosVencidosAsync(IEnumerable<Guid> contaIds, Guid usuarioId);
+        Task<IEnumerable<LancamentoDto>> GetLancamentosRecorrentesAsync(IEnumerable<Guid> contaIds, Guid usuarioId);
+        Task<decimal> GetSaldoPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds, Guid usuarioId);
+        Task<decimal> GetTotalReceitasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds, Guid usuarioId);
+        Task<decimal> GetTotalDespesasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds, Guid usuarioId);
         Task<LancamentoDto> CreateAsync(CreateLancamentoDto createDto, Guid usuarioId);
         Task<LancamentoDto> UpdateAsync(Guid id, UpdateLancamentoDto updateDto, Guid usuarioId);
         Task DeleteAsync(Guid id, Guid usuarioId);

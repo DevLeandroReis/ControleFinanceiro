@@ -27,17 +27,33 @@ namespace ControleFinanceiro.Application.Services
         }
 
         // Métodos auxiliares de verificação de acesso
+        private async Task VerificarELancarExcecaoSeNaoTemAcessoAsync(Guid contaId, Guid usuarioId)
+        {
+            if (!await _contaRepository.UsuarioTemAcessoContaAsync(usuarioId, contaId))
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para acessar recursos desta conta");
+            }
+        }
+
+        private async Task VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(IEnumerable<Guid> contaIds, Guid usuarioId)
+        {
+            if (contaIds == null || !contaIds.Any())
+            {
+                throw new ArgumentException("É necessário fornecer pelo menos uma conta");
+            }
+
+            foreach (var contaId in contaIds)
+            {
+                if (!await _contaRepository.UsuarioTemAcessoContaAsync(usuarioId, contaId))
+                {
+                    throw new UnauthorizedAccessException($"Você não tem permissão para acessar a conta com ID '{contaId}'");
+                }
+            }
+        }
+
         private async Task<bool> VerificarAcessoContaAsync(Guid contaId, Guid usuarioId)
         {
             return await _contaRepository.UsuarioTemAcessoContaAsync(usuarioId, contaId);
-        }
-
-        private async Task<bool> VerificarAcessoLancamentoAsync(Guid lancamentoId, Guid usuarioId)
-        {
-            var lancamento = await _lancamentoRepository.GetByIdAsync(lancamentoId);
-            if (lancamento == null) return false;
-            
-            return await VerificarAcessoContaAsync(lancamento.ContaId, usuarioId);
         }
 
         private async Task<IEnumerable<Lancamento>> FiltrarLancamentosPorAcessoAsync(IEnumerable<Lancamento> lancamentos, Guid usuarioId)
@@ -65,104 +81,115 @@ namespace ControleFinanceiro.Application.Services
             var lancamento = await _lancamentoRepository.GetByIdAsync(id);
             if (lancamento == null) return null;
 
-            if (!await VerificarAcessoContaAsync(lancamento.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para visualizar este lançamento");
-            }
+            // Verificar acesso à conta do lançamento antes de retornar os dados
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(lancamento.ContaId, usuarioId);
 
             return _mapper.Map<LancamentoDto>(lancamento);
         }
 
-        public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, Guid usuarioId)
+        public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosPorPeriodoAsync(dataInicio, dataFim);
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
-            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentosFiltrados);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosPorPeriodoEContasAsync(dataInicio, dataFim, contaIds);
+            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentos);
         }
 
-        public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorCategoriaAsync(Guid categoriaId, Guid usuarioId)
+        public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorCategoriaAsync(Guid categoriaId, IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosPorCategoriaAsync(categoriaId);
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
-            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentosFiltrados);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosPorCategoriaEContasAsync(categoriaId, contaIds);
+            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentos);
         }
 
-        public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorTipoAsync(TipoLancamento tipo, Guid usuarioId)
+        public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorTipoAsync(TipoLancamento tipo, IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosPorTipoAsync(tipo);
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
-            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentosFiltrados);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosPorTipoEContasAsync(tipo, contaIds);
+            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentos);
         }
 
-        public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorStatusAsync(StatusLancamento status, Guid usuarioId)
+        public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorStatusAsync(StatusLancamento status, IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosPorStatusAsync(status);
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
-            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentosFiltrados);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosPorStatusEContasAsync(status, contaIds);
+            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentos);
         }
 
-        public async Task<IEnumerable<LancamentoDto>> GetLancamentosVencidosAsync(Guid usuarioId)
+        public async Task<IEnumerable<LancamentoDto>> GetLancamentosVencidosAsync(IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosVencidosAsync();
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
-            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentosFiltrados);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosVencidosPorContasAsync(contaIds);
+            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentos);
         }
 
-        public async Task<IEnumerable<LancamentoDto>> GetLancamentosRecorrentesAsync(Guid usuarioId)
+        public async Task<IEnumerable<LancamentoDto>> GetLancamentosRecorrentesAsync(IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosRecorrentesAsync();
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
-            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentosFiltrados);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosRecorrentesPorContasAsync(contaIds);
+            return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentos);
         }
 
         public async Task<IEnumerable<LancamentoDto>> GetLancamentosPorContaAsync(Guid contaId, Guid usuarioId)
         {
-            if (!await VerificarAcessoContaAsync(contaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para visualizar lançamentos desta conta");
-            }
+            // Verificar acesso à conta ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(contaId, usuarioId);
 
             var lancamentos = await _lancamentoRepository.GetLancamentosPorContaAsync(contaId);
             return _mapper.Map<IEnumerable<LancamentoDto>>(lancamentos);
         }
 
-        public async Task<decimal> GetSaldoPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, Guid usuarioId)
+        public async Task<decimal> GetSaldoPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosPorPeriodoAsync(dataInicio, dataFim);
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosPorPeriodoEContasAsync(dataInicio, dataFim, contaIds);
             
-            return lancamentosFiltrados
+            return lancamentos
                 .Where(l => l.Status == StatusLancamento.Pago)
                 .Sum(l => l.Tipo == TipoLancamento.Receita ? l.Valor : -l.Valor);
         }
 
-        public async Task<decimal> GetTotalReceitasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, Guid usuarioId)
+        public async Task<decimal> GetTotalReceitasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosPorPeriodoAsync(dataInicio, dataFim);
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosPorPeriodoEContasAsync(dataInicio, dataFim, contaIds);
             
-            return lancamentosFiltrados
+            return lancamentos
                 .Where(l => l.Tipo == TipoLancamento.Receita && l.Status == StatusLancamento.Pago)
                 .Sum(l => l.Valor);
         }
 
-        public async Task<decimal> GetTotalDespesasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, Guid usuarioId)
+        public async Task<decimal> GetTotalDespesasPorPeriodoAsync(DateTime dataInicio, DateTime dataFim, IEnumerable<Guid> contaIds, Guid usuarioId)
         {
-            var lancamentos = await _lancamentoRepository.GetLancamentosPorPeriodoAsync(dataInicio, dataFim);
-            var lancamentosFiltrados = await FiltrarLancamentosPorAcessoAsync(lancamentos, usuarioId);
+            // Verificar acesso a todas as contas ANTES de buscar os lançamentos
+            await VerificarELancarExcecaoSeNaoTemAcessoATodasContasAsync(contaIds, usuarioId);
+
+            var lancamentos = await _lancamentoRepository.GetLancamentosPorPeriodoEContasAsync(dataInicio, dataFim, contaIds);
             
-            return lancamentosFiltrados
+            return lancamentos
                 .Where(l => l.Tipo == TipoLancamento.Despesa && l.Status == StatusLancamento.Pago)
                 .Sum(l => l.Valor);
         }
 
         public async Task<LancamentoDto> CreateAsync(CreateLancamentoDto createDto, Guid usuarioId)
         {
-            // Verificar se o usuário tem acesso à conta
-            if (!await VerificarAcessoContaAsync(createDto.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para criar lançamentos nesta conta");
-            }
+            // Verificar acesso à conta ANTES de qualquer outra operação
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(createDto.ContaId, usuarioId);
 
             // Validar se a categoria existe
             if (!await _categoriaRepository.ExistsAsync(createDto.CategoriaId))
@@ -198,16 +225,13 @@ namespace ControleFinanceiro.Application.Services
                 throw new KeyNotFoundException($"Lançamento com ID '{id}' não encontrado");
             }
 
-            // Verificar acesso ao lançamento atual
-            if (!await VerificarAcessoContaAsync(lancamento.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para atualizar este lançamento");
-            }
+            // Verificar acesso ao lançamento atual imediatamente após buscar
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(lancamento.ContaId, usuarioId);
 
             // Verificar acesso à nova conta se for diferente
-            if (updateDto.ContaId != lancamento.ContaId && !await VerificarAcessoContaAsync(updateDto.ContaId, usuarioId))
+            if (updateDto.ContaId != lancamento.ContaId)
             {
-                throw new UnauthorizedAccessException("Você não tem permissão para mover o lançamento para esta conta");
+                await VerificarELancarExcecaoSeNaoTemAcessoAsync(updateDto.ContaId, usuarioId);
             }
 
             // Validar se a categoria existe
@@ -248,14 +272,18 @@ namespace ControleFinanceiro.Application.Services
                 throw new KeyNotFoundException($"Lançamento com ID '{id}' não encontrado");
             }
 
-            if (!await VerificarAcessoContaAsync(lancamentoPai.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para atualizar este lançamento");
-            }
+            // Verificar acesso imediatamente após buscar
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(lancamentoPai.ContaId, usuarioId);
 
             if (!lancamentoPai.EhLancamentoPai())
             {
                 throw new InvalidOperationException("Este método só pode ser usado para lançamentos pai recorrentes");
+            }
+
+            // Verificar acesso à nova conta se for diferente
+            if (updateDto.ContaId != lancamentoPai.ContaId)
+            {
+                await VerificarELancarExcecaoSeNaoTemAcessoAsync(updateDto.ContaId, usuarioId);
             }
 
             // Validar se a categoria existe
@@ -327,10 +355,8 @@ namespace ControleFinanceiro.Application.Services
                 throw new KeyNotFoundException($"Lançamento com ID '{id}' não encontrado");
             }
 
-            if (!await VerificarAcessoContaAsync(lancamento.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para excluir este lançamento");
-            }
+            // Verificar acesso imediatamente após buscar
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(lancamento.ContaId, usuarioId);
 
             await _lancamentoRepository.DeleteAsync(lancamento);
         }
@@ -343,10 +369,8 @@ namespace ControleFinanceiro.Application.Services
                 throw new KeyNotFoundException($"Lançamento com ID '{id}' não encontrado");
             }
 
-            if (!await VerificarAcessoContaAsync(lancamento.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para modificar este lançamento");
-            }
+            // Verificar acesso imediatamente após buscar
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(lancamento.ContaId, usuarioId);
 
             lancamento.MarcarComoPago(dataPagamento);
             await _lancamentoRepository.UpdateAsync(lancamento);
@@ -362,10 +386,8 @@ namespace ControleFinanceiro.Application.Services
                 throw new KeyNotFoundException($"Lançamento com ID '{id}' não encontrado");
             }
 
-            if (!await VerificarAcessoContaAsync(lancamento.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para modificar este lançamento");
-            }
+            // Verificar acesso imediatamente após buscar
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(lancamento.ContaId, usuarioId);
 
             lancamento.MarcarComoPendente();
             await _lancamentoRepository.UpdateAsync(lancamento);
@@ -381,10 +403,8 @@ namespace ControleFinanceiro.Application.Services
                 throw new KeyNotFoundException($"Lançamento com ID '{id}' não encontrado");
             }
 
-            if (!await VerificarAcessoContaAsync(lancamento.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para cancelar este lançamento");
-            }
+            // Verificar acesso imediatamente após buscar
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(lancamento.ContaId, usuarioId);
 
             lancamento.Cancelar();
             await _lancamentoRepository.UpdateAsync(lancamento);
@@ -394,10 +414,8 @@ namespace ControleFinanceiro.Application.Services
 
         public async Task<IEnumerable<LancamentoDto>> CriarLancamentosRecorrentesAsync(CreateLancamentoDto createDto, Guid usuarioId)
         {
-            if (!await VerificarAcessoContaAsync(createDto.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para criar lançamentos nesta conta");
-            }
+            // Verificar acesso à conta ANTES de qualquer outra operação
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(createDto.ContaId, usuarioId);
 
             if (!createDto.EhRecorrente || createDto.TipoRecorrencia == TipoRecorrencia.Nenhuma)
             {
@@ -455,10 +473,8 @@ namespace ControleFinanceiro.Application.Services
                 throw new InvalidOperationException("Lançamento pai não encontrado ou não é um lançamento recorrente válido");
             }
 
-            if (!await VerificarAcessoContaAsync(lancamentoPai.ContaId, usuarioId))
-            {
-                throw new UnauthorizedAccessException("Você não tem permissão para gerar lançamentos desta conta");
-            }
+            // Verificar acesso imediatamente após buscar
+            await VerificarELancarExcecaoSeNaoTemAcessoAsync(lancamentoPai.ContaId, usuarioId);
 
             var createDto = _mapper.Map<CreateLancamentoDto>(lancamentoPai);
             await GerarLancamentosFilhosAsync(lancamentoPai, createDto);
