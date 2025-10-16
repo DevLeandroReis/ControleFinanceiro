@@ -40,7 +40,7 @@ namespace ControleFinanceiro.Infrastructure.Data.Configurations
 
             // Índices
             builder.HasIndex(x => new { x.Nome, x.ContaId }).IsUnique()
-                .HasFilter("[IsDeleted] = 0");
+                .HasFilter("\"IsDeleted\" = false");
             builder.HasIndex(x => x.Ativo);
             builder.HasIndex(x => x.IsDeleted);
             builder.HasIndex(x => x.ContaId);

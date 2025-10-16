@@ -15,7 +15,7 @@ namespace ControleFinanceiro.Infrastructure.Data.Configurations
             // Índice único para evitar duplicação de usuário/conta
             builder.HasIndex(uc => new { uc.UsuarioId, uc.ContaId })
                 .IsUnique()
-                .HasFilter("[IsDeleted] = 0");
+                .HasFilter("\"IsDeleted\" = false");
 
             // Relacionamentos já configurados nas outras entidades
             builder.HasOne(uc => uc.Usuario)

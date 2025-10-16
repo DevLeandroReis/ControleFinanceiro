@@ -22,7 +22,7 @@ namespace ControleFinanceiro.Infrastructure.Data.Configurations
 
             builder.HasIndex(u => u.Email)
                 .IsUnique()
-                .HasFilter("[IsDeleted] = 0");
+                .HasFilter("\"IsDeleted\" = false");
 
             builder.Property(u => u.SenhaHash)
                 .IsRequired()
