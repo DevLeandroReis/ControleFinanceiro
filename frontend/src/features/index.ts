@@ -1,6 +1,9 @@
 // Features layer
 // Business features and user interactions
 
+// Auth Feature
+export { ProtectedRoute } from './auth';
+
 // Add Transaction Feature
 export { useAddTransaction, AddTransactionForm } from './add-transaction';
 

@@ -1,6 +1,33 @@
+// API exports
 export { userApi } from './api';
-export type { LoginDTO, RegisterDTO, LoginResponse, UpdateUserDTO } from './api';
-export { loginSchema, registerSchema } from './schemas';
-export type { LoginInput, RegisterInput } from './schemas';
+export type { 
+  LoginDTO, 
+  RegisterDTO, 
+  ForgotPasswordDTO,
+  ResetPasswordDTO,
+  UpdateUserDTO 
+} from './api';
+
+// Schema exports
+export { 
+  loginSchema, 
+  registerSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema
+} from './schemas';
+export type { 
+  LoginInput, 
+  RegisterInput,
+  ForgotPasswordInput,
+  ResetPasswordInput
+} from './schemas';
+
+// Store exports
 export { useUserStore } from './store';
-export type { User, UserState } from './types';
+
+// Type exports
+export type { 
+  User, 
+  UserState,
+  AuthResult
+} from './types';

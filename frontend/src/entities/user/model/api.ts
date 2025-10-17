@@ -1,6 +1,9 @@
 import { apiClient } from '@/shared/api';
-import type { User } from './types';
+import type { User, AuthResult } from './types';
 
+/**
+ * DTOs matching backend endpoints
+ */
 export interface LoginDTO {
   email: string;
   senha: string;
@@ -10,11 +13,17 @@ export interface RegisterDTO {
   nome: string;
   email: string;
   senha: string;
+  confirmarSenha: string;
 }
 
-export interface LoginResponse {
+export interface ForgotPasswordDTO {
+  email: string;
+}
+
+export interface ResetPasswordDTO {
   token: string;
-  usuario: User;
+  novaSenha: string;
+  confirmarNovaSenha: string;
 }
 
 export interface UpdateUserDTO {
@@ -23,64 +32,75 @@ export interface UpdateUserDTO {
   senha?: string;
 }
 
+/**
+ * User API - handles all user-related HTTP requests
+ */
 export const userApi = {
   /**
-   * Faz login do usuário
+   * Login - POST /api/usuarios/login
+   * @param data LoginDTO
+   * @returns AuthResult with token and user data
    */
-  async login(data: LoginDTO): Promise<LoginResponse> {
-    const response = await apiClient.post<LoginResponse>('/usuarios/login', data);
+  async login(data: LoginDTO): Promise<AuthResult> {
+    const response = await apiClient.post<AuthResult>('/usuarios/login', data);
     return response.data;
   },
 
   /**
-   * Registra um novo usuário
+   * Register - POST /api/usuarios/registrar
+   * @param data RegisterDTO
+   * @returns User data
    */
-  async register(data: RegisterDTO): Promise<LoginResponse> {
-    const response = await apiClient.post<LoginResponse>('/usuarios/registro', data);
+  async register(data: RegisterDTO): Promise<User> {
+    const response = await apiClient.post<User>('/usuarios/registrar', data);
     return response.data;
   },
 
   /**
-   * Busca os dados do usuário logado
+   * Forgot Password - POST /api/usuarios/recuperar-senha
+   * @param data ForgotPasswordDTO
+   * @returns Success message
    */
-  async getProfile(): Promise<User> {
-    const response = await apiClient.get<User>('/usuarios/perfil');
+  async forgotPassword(data: ForgotPasswordDTO): Promise<{ message: string }> {
+    const response = await apiClient.post<{ message: string }>('/usuarios/recuperar-senha', data);
     return response.data;
   },
 
   /**
-   * Atualiza os dados do usuário
+   * Reset Password - POST /api/usuarios/redefinir-senha
+   * @param data ResetPasswordDTO
+   * @returns Success message
    */
-  async updateProfile(data: UpdateUserDTO): Promise<User> {
-    const response = await apiClient.post<User>('/usuarios/perfil', data);
+  async resetPassword(data: ResetPasswordDTO): Promise<{ message: string }> {
+    const response = await apiClient.post<{ message: string }>('/usuarios/redefinir-senha', data);
     return response.data;
   },
 
   /**
-   * Faz logout do usuário
+   * Confirm Email - GET /api/usuarios/confirmar-email?token={token}
+   * @param token Email confirmation token
+   * @returns Success message
+   */
+  async confirmEmail(token: string): Promise<{ message: string }> {
+    const response = await apiClient.get<{ message: string }>(`/usuarios/confirmar-email?token=${token}`);
+    return response.data;
+  },
+
+  /**
+   * Get User by ID - GET /api/usuarios/{id}
+   * @param id User ID
+   * @returns User data
+   */
+  async getUserById(id: string): Promise<User> {
+    const response = await apiClient.get<User>(`/usuarios/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Logout - clears local storage
    */
   async logout(): Promise<void> {
-    // Limpa o token do localStorage
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user-storage');
   },
-
-  /**
-   * Solicita recuperação de senha
-   */
-  async forgotPassword(email: string): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/usuarios/esqueci-senha', { email });
-    return response.data;
-  },
-
-  /**
-   * Reseta a senha com o token recebido por email
-   */
-  async resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/usuarios/resetar-senha', {
-      token,
-      novaSenha: newPassword
-    });
-    return response.data;
-  }
 };

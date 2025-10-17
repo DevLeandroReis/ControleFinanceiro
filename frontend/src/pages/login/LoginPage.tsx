@@ -70,6 +70,16 @@ export const LoginPage: FC = () => {
             )}
           </div>
 
+          <div className="forgot-password-link">
+            <button 
+              type="button"
+              className="btn btn--link btn--small" 
+              onClick={() => navigate('/forgot-password')}
+            >
+              Esqueceu sua senha?
+            </button>
+          </div>
+
           {error && (
             <div className="form-error" role="alert">
               {error}

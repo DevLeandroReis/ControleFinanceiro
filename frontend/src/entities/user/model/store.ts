@@ -1,26 +1,52 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import { userApi, type LoginDTO, type RegisterDTO, type UpdateUserDTO } from './api';
+import { userApi, type LoginDTO, type RegisterDTO, type ForgotPasswordDTO, type ResetPasswordDTO } from './api';
 import type { User } from './types';
+import { AxiosError } from 'axios';
+
+/**
+ * Helper function to extract error message from API responses
+ */
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof AxiosError) {
+    const data = error.response?.data;
+    if (typeof data === 'string') return data;
+    if (data?.message) return data.message;
+    if (data?.errors) {
+      // Flatten validation errors
+      const messages = Object.values(data.errors).flat();
+      return messages.join(', ');
+    }
+  }
+  if (error instanceof Error) return error.message;
+  return 'Erro desconhecido';
+};
 
 interface UserState {
   user: User | null;
+  token: string | null;
   isLoading: boolean;
   error: string | null;
   isAuthenticated: boolean;
+  successMessage: string | null;
 
-  // Actions com API
+  // Auth actions
   login: (data: LoginDTO) => Promise<void>;
   register: (data: RegisterDTO) => Promise<void>;
   logout: () => Promise<void>;
-  fetchProfile: () => Promise<void>;
-  updateProfile: (data: UpdateUserDTO) => Promise<void>;
+  forgotPassword: (data: ForgotPasswordDTO) => Promise<void>;
+  resetPassword: (data: ResetPasswordDTO) => Promise<void>;
+  
+  // User data actions
+  fetchUserById: (id: string) => Promise<void>;
   
   // Helpers
   setUser: (user: User | null) => void;
   clearUser: () => void;
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
+  setSuccessMessage: (message: string | null) => void;
+  clearMessages: () => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -28,91 +54,112 @@ export const useUserStore = create<UserState>()(
     persist(
       (set) => ({
         user: null,
+        token: null,
         isLoading: false,
         error: null,
+        successMessage: null,
         isAuthenticated: false,
 
         login: async (data) => {
-          set({ isLoading: true, error: null });
+          set({ isLoading: true, error: null, successMessage: null });
           try {
             const response = await userApi.login(data);
             
-            // Salvar token no localStorage
+            // Save token to localStorage
             localStorage.setItem('auth_token', response.token);
             
             set({ 
-              user: response.usuario, 
+              user: response.usuario,
+              token: response.token,
               isAuthenticated: true,
-              isLoading: false 
+              isLoading: false,
+              error: null,
             });
           } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer login';
+            const errorMessage = getErrorMessage(error);
             set({ error: errorMessage, isLoading: false, isAuthenticated: false });
             throw error;
           }
         },
 
         register: async (data) => {
-          set({ isLoading: true, error: null });
+          set({ isLoading: true, error: null, successMessage: null });
           try {
-            const response = await userApi.register(data);
-            
-            // Salvar token no localStorage
-            localStorage.setItem('auth_token', response.token);
+            const user = await userApi.register(data);
             
             set({ 
-              user: response.usuario, 
-              isAuthenticated: true,
-              isLoading: false 
+              user,
+              isLoading: false,
+              error: null,
+              successMessage: 'Cadastro realizado com sucesso! Verifique seu email para confirmar sua conta.',
             });
           } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Erro ao registrar usuário';
-            set({ error: errorMessage, isLoading: false, isAuthenticated: false });
+            const errorMessage = getErrorMessage(error);
+            set({ error: errorMessage, isLoading: false });
             throw error;
           }
         },
 
         logout: async () => {
-          set({ isLoading: true, error: null });
+          set({ isLoading: true, error: null, successMessage: null });
           try {
             await userApi.logout();
             set({ 
-              user: null, 
+              user: null,
+              token: null,
               isAuthenticated: false,
-              isLoading: false 
+              isLoading: false,
+              error: null,
             });
           } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer logout';
+            const errorMessage = getErrorMessage(error);
             set({ error: errorMessage, isLoading: false });
           }
         },
 
-        fetchProfile: async () => {
-          set({ isLoading: true, error: null });
+        forgotPassword: async (data) => {
+          set({ isLoading: true, error: null, successMessage: null });
           try {
-            const user = await userApi.getProfile();
+            const response = await userApi.forgotPassword(data);
             set({ 
-              user, 
-              isAuthenticated: true,
-              isLoading: false 
+              isLoading: false,
+              error: null,
+              successMessage: response.message,
             });
           } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Erro ao carregar perfil';
+            const errorMessage = getErrorMessage(error);
             set({ error: errorMessage, isLoading: false });
             throw error;
           }
         },
 
-        updateProfile: async (data) => {
-          set({ isLoading: true, error: null });
+        resetPassword: async (data) => {
+          set({ isLoading: true, error: null, successMessage: null });
           try {
-            const updatedUser = await userApi.updateProfile(data);
+            const response = await userApi.resetPassword(data);
             set({ 
-              user: updatedUser, 
-              isLoading: false 
+              isLoading: false,
+              error: null,
+              successMessage: response.message,
             });
           } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Erro ao atualizar perfil';
+            const errorMessage = getErrorMessage(error);
+            set({ error: errorMessage, isLoading: false });
+            throw error;
+          }
+        },
+
+        fetchUserById: async (id: string) => {
+          set({ isLoading: true, error: null });
+          try {
+            const user = await userApi.getUserById(id);
+            set({ 
+              user,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+          } catch (error) {
+            const errorMessage = getErrorMessage(error);
             set({ error: errorMessage, isLoading: false });
             throw error;
           }
@@ -121,20 +168,31 @@ export const useUserStore = create<UserState>()(
         setUser: (user) => set({ 
           user, 
           isAuthenticated: user !== null,
-          error: null 
+          error: null,
         }),
         
         clearUser: () => set({ 
-          user: null, 
+          user: null,
+          token: null,
           isAuthenticated: false,
-          error: null 
+          error: null,
         }),
         
         setLoading: (isLoading) => set({ isLoading }),
+        
         setError: (error) => set({ error, isLoading: false }),
+        
+        setSuccessMessage: (successMessage) => set({ successMessage }),
+        
+        clearMessages: () => set({ error: null, successMessage: null }),
       }),
       {
         name: 'user-storage',
+        partialize: (state) => ({
+          user: state.user,
+          token: state.token,
+          isAuthenticated: state.isAuthenticated,
+        }),
       }
     ),
     { name: 'UserStore' }

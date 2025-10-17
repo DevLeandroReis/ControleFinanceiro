@@ -1,11 +1,18 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { RootLayout } from './layouts';
-import { HomePage } from '../pages/home';
-import { DashboardPage } from '../pages/dashboard';
-import { TransactionsPage } from '../pages/transactions';
-import { AccountsPage } from '../pages/accounts';
-import { CategoriesPage } from '../pages/categories';
-import { NotFoundPage } from '../pages/not-found';
+import { ProtectedRoute } from '../features';
+import { 
+  HomePage, 
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  DashboardPage,
+  TransactionsPage,
+  AccountsPage,
+  CategoriesPage,
+  NotFoundPage 
+} from '../pages';
 
 export const router = createBrowserRouter([
   {
@@ -19,20 +26,53 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <DashboardPage />,
+        element: (
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'transacoes',
-        element: <TransactionsPage />,
+        element: (
+          <ProtectedRoute>
+            <TransactionsPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'contas',
-        element: <AccountsPage />,
+        element: (
+          <ProtectedRoute>
+            <AccountsPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'categorias',
-        element: <CategoriesPage />,
+        element: (
+          <ProtectedRoute>
+            <CategoriesPage />
+          </ProtectedRoute>
+        ),
       },
     ],
+  },
+  // Auth routes - outside main layout
+  {
+    path: 'login',
+    element: <LoginPage />,
+  },
+  {
+    path: 'register',
+    element: <RegisterPage />,
+  },
+  {
+    path: 'forgot-password',
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: 'reset-password',
+    element: <ResetPasswordPage />,
   },
 ]);
