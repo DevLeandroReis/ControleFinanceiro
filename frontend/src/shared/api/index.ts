@@ -1,4 +1,5 @@
 // Shared API
 // API client, request handlers, interceptors
 
-export {};
+export { apiClient } from './client';
+export type { ApiResponse, ApiError } from './client';

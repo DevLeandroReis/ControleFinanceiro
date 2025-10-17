@@ -3,6 +3,7 @@
 // Each page should be in its own folder
 
 export { HomePage } from './home';
+export { LoginPage } from './login';
 export { DashboardPage } from './dashboard';
 export { TransactionsPage } from './transactions';
 export { AccountsPage } from './accounts';

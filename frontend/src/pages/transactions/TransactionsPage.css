@@ -31,12 +31,124 @@
   border-color: #646cff;
 }
 
-.transactions-list {
+.transaction-form {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   padding: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   min-height: 300px;
+}
+
+.transaction-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border-left: 4px solid;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.transaction-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-card--income {
+  border-left-color: #4ade80;
+}
+
+.transaction-card--expense {
+  border-left-color: #f87171;
+}
+
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.transaction-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 0.25rem;
+}
+
+.btn-delete:hover {
+  opacity: 1;
+}
+
+.transaction-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.transaction-amount--income {
+  color: #4ade80;
+}
+
+.transaction-amount--expense {
+  color: #f87171;
+}
+
+.transaction-date {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {
@@ -48,6 +160,28 @@
   .filters {
     flex-direction: column;
   }
+}
+
+/* Error messages */
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.form-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.25rem;
 }
 
 @media (prefers-color-scheme: light) {

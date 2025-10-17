@@ -1,0 +1,105 @@
+.transaction-filter-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.transaction-filter-panel .filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.transaction-filter-panel .filter-header h3 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+}
+
+.transaction-filter-panel .filter-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.transaction-filter-panel .btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.transaction-filter-panel .btn--clear {
+  background: #ef4444;
+  color: white;
+}
+
+.transaction-filter-panel .btn--clear:hover {
+  background: #dc2626;
+}
+
+.transaction-filter-panel .btn--toggle {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.transaction-filter-panel .btn--toggle:hover {
+  background: #e5e7eb;
+}
+
+.transaction-filter-panel .filter-content {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.transaction-filter-panel .filter-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .transaction-filter-panel .filter-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .transaction-filter-panel .filter-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.transaction-filter-panel .filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.transaction-filter-panel label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.transaction-filter-panel input,
+.transaction-filter-panel select {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.transaction-filter-panel input:focus,
+.transaction-filter-panel select:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
+}

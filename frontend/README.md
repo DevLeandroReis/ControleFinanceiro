@@ -43,6 +43,7 @@ src/
 - **TypeScript** 5.7.2 - Tipagem estática
 - **Vite** 7.1.10 - Build tool e dev server
 - **React Router** 7.1.3 - Roteamento e navegação
+- **Zustand** 5.0.2 - Gerenciamento de estado
 - **Feature-Sliced Design** - Arquitetura de projeto
 
 ## 📦 Path Aliases
@@ -89,6 +90,7 @@ VITE_APP_VERSION=0.0.1
 - [FSD_STRUCTURE.md](./FSD_STRUCTURE.md) - Arquitetura Feature-Sliced Design
 - [PROJECT_SETUP.md](./PROJECT_SETUP.md) - Setup completo do projeto
 - [REACT_ROUTER.md](./REACT_ROUTER.md) - Documentação do React Router
+- [ZUSTAND.md](./ZUSTAND.md) - Gerenciamento de estado com Zustand
 - [FSD_EXAMPLES.md](./FSD_EXAMPLES.md) - Exemplos práticos de implementação
 - [Vite Docs](https://vitejs.dev/)
 - [React Docs](https://react.dev/)
@@ -110,7 +112,7 @@ Consulte `REACT_ROUTER.md` para mais detalhes sobre roteamento.
 
 Consulte `PROJECT_SETUP.md` para sugestões de bibliotecas e configurações adicionais:
 - ✅ ~~React Router para roteamento~~ (Implementado!)
-- Zustand ou Redux para gerenciamento de estado
+- ✅ ~~Zustand para gerenciamento de estado~~ (Implementado!)
 - Axios para requisições HTTP
 - React Hook Form para formulários
 - Material UI ou Chakra UI para componentes

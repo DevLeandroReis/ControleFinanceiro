@@ -1,0 +1,108 @@
+.edit-transaction-form {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.edit-transaction-form h3 {
+  margin: 0 0 1.5rem 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+}
+
+.edit-transaction-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .edit-transaction-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.edit-transaction-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.edit-transaction-form label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.edit-transaction-form input,
+.edit-transaction-form select {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.edit-transaction-form input:focus,
+.edit-transaction-form select:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
+}
+
+.edit-transaction-form .error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+}
+
+.edit-transaction-form .form-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.edit-transaction-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.edit-transaction-form .btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-transaction-form .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.edit-transaction-form .btn--primary {
+  background: #646cff;
+  color: white;
+}
+
+.edit-transaction-form .btn--primary:hover:not(:disabled) {
+  background: #535bf2;
+}
+
+.edit-transaction-form .btn--secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.edit-transaction-form .btn--secondary:hover:not(:disabled) {
+  background: #e5e7eb;
+}
