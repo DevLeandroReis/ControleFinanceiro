@@ -1,0 +1,308 @@
+.transaction-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border-left: 4px solid;
+  position: relative;
+  overflow: hidden;
+}
+
+.transaction-card.receita {
+  border-left-color: #10b981;
+}
+
+.transaction-card.despesa {
+  border-left-color: #ef4444;
+}
+
+.transaction-card.vencida {
+  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, #fff9e6 0%, white 100%);
+}
+
+.transaction-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.card-title-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+.badge-recorrente {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  color: white;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.valor-principal {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.transaction-card.receita .valor-principal {
+  color: #10b981;
+}
+
+.transaction-card.despesa .valor-principal {
+  color: #ef4444;
+}
+
+.menu-container {
+  position: relative;
+}
+
+.btn-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 6px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-menu:hover {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+.action-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 200px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+  z-index: 10;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+  background: #f3f4f6;
+}
+
+.menu-item-success:hover {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.menu-item-warning:hover {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.menu-item-danger:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 4px 0;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.info-item svg {
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+.info-label {
+  font-weight: 500;
+}
+
+.info-value {
+  color: #1f2937;
+  font-weight: 400;
+}
+
+.card-observacoes {
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+}
+
+.card-observacoes p {
+  margin: 0;
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-pendente {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.badge-pago {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.badge-cancelado {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+.badge-vencido {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.tipo-badge {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tipo-badge.receita {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #059669;
+}
+
+.tipo-badge.despesa {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .transaction-card {
+    padding: 16px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .valor-principal {
+    font-size: 20px;
+  }
+
+  .card-title {
+    font-size: 16px;
+  }
+
+  .card-info-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

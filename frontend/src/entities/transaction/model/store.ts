@@ -1,25 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { transactionApi, type CreateTransactionDTO } from './api';
-import type { Transaction } from './types';
-
-interface TransactionState {
-  transactions: Transaction[];
-  isLoading: boolean;
-  error: string | null;
-
-  // Actions com API
-  fetchTransactions: () => Promise<void>;
-  addTransaction: (data: CreateTransactionDTO) => Promise<void>;
-  updateTransaction: (id: string, data: Partial<CreateTransactionDTO>) => Promise<void>;
-  deleteTransaction: (id: string) => Promise<void>;
-  
-  // Helpers
-  setTransactions: (transactions: Transaction[]) => void;
-  setLoading: (isLoading: boolean) => void;
-  setError: (error: string | null) => void;
-  clearTransactions: () => void;
-}
+import { transactionApi, type CreateTransactionDTO, type UpdateTransactionDTO } from './api';
+import type { Transaction, TransactionState } from './types';
 
 export const useTransactionStore = create<TransactionState>()(
   devtools(
@@ -81,6 +63,57 @@ export const useTransactionStore = create<TransactionState>()(
           }));
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Erro ao deletar transação';
+          set({ error: errorMessage, isLoading: false });
+          throw error;
+        }
+      },
+
+      marcarComoPago: async (id, dataPagamento?: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const updatedTransaction = await transactionApi.marcarComoPago(id, dataPagamento);
+          set((state) => ({
+            transactions: state.transactions.map((t) =>
+              t.id === id ? updatedTransaction : t
+            ),
+            isLoading: false,
+          }));
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Erro ao marcar como pago';
+          set({ error: errorMessage, isLoading: false });
+          throw error;
+        }
+      },
+
+      marcarComoPendente: async (id) => {
+        set({ isLoading: true, error: null });
+        try {
+          const updatedTransaction = await transactionApi.marcarComoPendente(id);
+          set((state) => ({
+            transactions: state.transactions.map((t) =>
+              t.id === id ? updatedTransaction : t
+            ),
+            isLoading: false,
+          }));
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Erro ao marcar como pendente';
+          set({ error: errorMessage, isLoading: false });
+          throw error;
+        }
+      },
+
+      cancelar: async (id) => {
+        set({ isLoading: true, error: null });
+        try {
+          const updatedTransaction = await transactionApi.cancelar(id);
+          set((state) => ({
+            transactions: state.transactions.map((t) =>
+              t.id === id ? updatedTransaction : t
+            ),
+            isLoading: false,
+          }));
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Erro ao cancelar transação';
           set({ error: errorMessage, isLoading: false });
           throw error;
         }
