@@ -1,42 +1,64 @@
-﻿/* Dashboard Page - Estilos Modernos */
+﻿/* ========================================
+   DASHBOARD PAGE - MODERN DESIGN
+   ======================================== */
 
 .dashboard-page {
-  max-width: 1600px;
+  padding: 0;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 24px;
-  background: #f9fafb;
-  min-height: 100vh;
+  animation: fadeIn 0.4s ease;
 }
 
-/* ===== HEADER ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   HEADER SECTION
+   ======================================== */
+
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 2px solid #e5e7eb;
+  padding: 24px 0;
+  border-bottom: 1px solid #f3f4f6;
 }
 
-.dashboard-header h1 {
-  font-size: 36px;
-  font-weight: 800;
-  color: #1f2937;
-  margin: 0 0 8px 0;
+.dashboard-header > div:first-child {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .dashboard-header .header-icon {
-  color: #6366f1;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .dashboard-header .subtitle {
-  font-size: 16px;
+  margin: 4px 0 0 0;
   color: #6b7280;
-  margin: 0;
-  font-weight: 400;
+  font-size: 14px;
 }
 
 .dashboard-period {
@@ -45,28 +67,39 @@
   gap: 8px;
   padding: 10px 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
+  border-radius: 10px;
   color: white;
   font-weight: 600;
-  font-size: 15px;
-  box-shadow: 0 4px 6px -1px rgba(102, 126, 234, 0.3);
+  font-size: 14px;
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
 }
 
-/* ===== KPI CARDS ===== */
+.dashboard-period:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* ========================================
+   KPI CARDS (ESTATÍSTICAS)
+   ======================================== */
+
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
   margin-bottom: 32px;
 }
 
 .kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
   background: white;
   border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
-  border: 1px solid #e5e7eb;
   position: relative;
   overflow: hidden;
 }
@@ -78,59 +111,65 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  background: linear-gradient(90deg, var(--kpi-gradient-from), var(--kpi-gradient-to));
 }
 
 .kpi-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-.kpi-card:hover::before {
-  opacity: 1;
+.kpi-card--income {
+  --kpi-gradient-from: #10b981;
+  --kpi-gradient-to: #059669;
+  --kpi-bg: #d1fae5;
+  --kpi-color: #059669;
+}
+
+.kpi-card--expense {
+  --kpi-gradient-from: #ef4444;
+  --kpi-gradient-to: #dc2626;
+  --kpi-bg: #fee2e2;
+  --kpi-color: #dc2626;
+}
+
+.kpi-card--balance {
+  --kpi-gradient-from: #667eea;
+  --kpi-gradient-to: #764ba2;
+  --kpi-bg: #e0e7ff;
+  --kpi-color: #667eea;
+}
+
+.kpi-card--savings {
+  --kpi-gradient-from: #f59e0b;
+  --kpi-gradient-to: #d97706;
+  --kpi-bg: #fef3c7;
+  --kpi-color: #d97706;
 }
 
 .kpi-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
 }
 
 .kpi-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.kpi-card--income .kpi-icon {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.kpi-card--expense .kpi-icon {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-}
-
-.kpi-card--balance .kpi-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-}
-
-.kpi-card--savings .kpi-icon {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  background: var(--kpi-bg);
+  color: var(--kpi-color);
+  flex-shrink: 0;
 }
 
 .kpi-trend {
-  padding: 6px 12px;
+  padding: 4px 12px;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .kpi-trend--positive {
@@ -151,37 +190,54 @@
 .kpi-body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .kpi-label {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: #6b7280;
-  margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin: 0;
 }
 
 .kpi-value {
-  font-size: 32px;
-  font-weight: 800;
-  color: #1f2937;
+  font-size: 28px;
+  font-weight: 700;
   margin: 0;
-  line-height: 1;
+}
+
+.kpi-card--income .kpi-value {
+  color: #059669;
+}
+
+.kpi-card--expense .kpi-value {
+  color: #dc2626;
+}
+
+.kpi-card--balance .kpi-value {
+  color: #667eea;
+}
+
+.kpi-card--savings .kpi-value {
+  color: #d97706;
 }
 
 .kpi-info {
-  font-size: 13px;
+  font-size: 12px;
   color: #9ca3af;
   font-weight: 500;
 }
 
-/* ===== CHARTS GRID ===== */
+/* ========================================
+   CHARTS GRID
+   ======================================== */
+
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 24px;
+  gap: 20px;
   margin-bottom: 32px;
 }
 
@@ -189,26 +245,44 @@
   background: white;
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
 }
 
 .chart-card:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .chart-card--full {
   grid-column: 1 / -1;
 }
 
+.chart-card--full {
+  grid-column: 1 / -1;
+}
+
+/* ========================================
+   CHART HEADER & CONTAINER
+   ======================================== */
+
 .chart-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #f3f4f6;
 }
 
 .chart-header h2 {
@@ -222,7 +296,7 @@
 }
 
 .chart-subtitle {
-  font-size: 13px;
+  font-size: 12px;
   color: #9ca3af;
   font-weight: 500;
 }
@@ -232,26 +306,49 @@
   min-height: 280px;
 }
 
-/* ===== BOTTOM SECTION ===== */
+/* ========================================
+   BOTTOM SECTION - CONTAS E TRANSAÇÕES
+   ======================================== */
+
 .bottom-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 24px;
+  gap: 20px;
+  margin-bottom: 32px;
 }
 
-/* ===== ACCOUNTS CARD ===== */
+/* Cards de Contas e Transações */
 .accounts-card,
 .transactions-card {
   background: white;
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.accounts-card::before,
+.transactions-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.accounts-card:hover,
+.transactions-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .section-header {
   padding-bottom: 16px;
-  border-bottom: 2px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
   margin-bottom: 20px;
 }
 
@@ -265,10 +362,14 @@
   gap: 8px;
 }
 
+/* ========================================
+   ACCOUNTS LIST
+   ======================================== */
+
 .accounts-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .account-item {
@@ -284,6 +385,7 @@
 .account-item:hover {
   background: #f3f4f6;
   transform: translateX(4px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .account-info {
@@ -303,25 +405,28 @@
 }
 
 .account-details h4 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #1f2937;
   margin: 0 0 4px 0;
 }
 
 .account-type {
-  font-size: 13px;
+  font-size: 12px;
   color: #6b7280;
   font-weight: 500;
 }
 
 .account-balance {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #1f2937;
 }
 
-/* ===== TRANSACTIONS CARD ===== */
+/* ========================================
+   TRANSACTIONS LIST
+   ======================================== */
+
 .transactions-list {
   display: flex;
   flex-direction: column;
@@ -447,7 +552,10 @@
   color: #92400e;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
 @media (max-width: 1400px) {
   .charts-grid {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -458,15 +566,16 @@
   .bottom-section {
     grid-template-columns: 1fr;
   }
+  
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-  .dashboard-page {
-    padding: 16px;
-  }
-
   .dashboard-header {
     flex-direction: column;
+    align-items: stretch;
     gap: 16px;
   }
 
@@ -487,14 +596,10 @@
   }
 
   .kpi-value {
-    font-size: 28px;
+    font-size: 24px;
   }
 
-  .transaction-details h4 {
-    font-size: 13px;
-  }
-
-  .transaction-value {
-    font-size: 14px;
+  .bottom-section {
+    grid-template-columns: 1fr;
   }
 }

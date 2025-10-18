@@ -99,8 +99,13 @@ export const DashboardPage: FC = () => {
     <div className="dashboard-page">
       <header className="dashboard-header">
         <div>
-          <h1><BarChart3 size={32} className="header-icon" />Dashboard Financeiro</h1>
-          <p className="subtitle">Visão geral completa das suas finanças</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <BarChart3 size={32} className="header-icon" />
+            <div>
+              <h1>Dashboard Financeiro</h1>
+              <p className="subtitle">Visão geral completa das suas finanças</p>
+            </div>
+          </div>
         </div>
         <div className="dashboard-period">
           <Calendar size={18} />
