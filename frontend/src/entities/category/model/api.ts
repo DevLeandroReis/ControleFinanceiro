@@ -18,7 +18,7 @@ export const categoryApi = {
    * Busca todas as categorias do usuário
    */
   async getAll(): Promise<Category[]> {
-    const response = await apiClient.get<Category[]>('/categorias');
+    const response = await apiClient.get<Category[]>('/api/Categorias');
     return response.data;
   },
 
@@ -26,7 +26,7 @@ export const categoryApi = {
    * Busca uma categoria por ID
    */
   async getById(id: string): Promise<Category> {
-    const response = await apiClient.get<Category>(`/categorias/${id}`);
+    const response = await apiClient.get<Category>(`/api/Categorias/${id}`);
     return response.data;
   },
 
@@ -34,7 +34,7 @@ export const categoryApi = {
    * Cria uma nova categoria
    */
   async create(data: CreateCategoryDTO): Promise<Category> {
-    const response = await apiClient.post<Category>('/categorias', data);
+    const response = await apiClient.post<Category>('/api/Categorias', data);
     return response.data;
   },
 
@@ -42,7 +42,7 @@ export const categoryApi = {
    * Atualiza uma categoria existente
    */
   async update(id: string, data: Partial<CreateCategoryDTO>): Promise<Category> {
-    const response = await apiClient.put<Category>(`/categorias/${id}`, data);
+    const response = await apiClient.put<Category>(`/api/Categorias/${id}`, data);
     return response.data;
   },
 
@@ -50,14 +50,14 @@ export const categoryApi = {
    * Remove uma categoria
    */
   async delete(id: string): Promise<void> {
-    await apiClient.delete<void>(`/categorias/${id}`);
+    await apiClient.delete<void>(`/api/Categorias/${id}`);
   },
 
   /**
    * Busca categorias por tipo
    */
   async getByType(tipo: 'income' | 'expense'): Promise<Category[]> {
-    const response = await apiClient.get<Category[]>('/categorias', {
+    const response = await apiClient.get<Category[]>('/api/Categorias', {
       params: { tipo }
     });
     return response.data;
@@ -67,7 +67,7 @@ export const categoryApi = {
    * Cria categorias padrão para o usuário
    */
   async createDefaults(): Promise<Category[]> {
-    const response = await apiClient.post<Category[]>('/categorias/padrao');
+    const response = await apiClient.post<Category[]>('/api/Categorias/padrao');
     return response.data;
   }
 };

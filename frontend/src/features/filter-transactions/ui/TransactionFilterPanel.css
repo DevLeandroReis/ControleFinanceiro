@@ -1,9 +1,10 @@
 .transaction-filter-panel {
-  background: white;
+  background: var(--color-bg-primary, #ffffff);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
   margin-bottom: 2rem;
+  border: 1px solid var(--color-border-light, #e5e7eb);
 }
 
 .transaction-filter-panel .filter-header {
@@ -15,7 +16,7 @@
 
 .transaction-filter-panel .filter-header h3 {
   margin: 0;
-  color: #1f2937;
+  color: var(--color-text-primary, #1f2937);
   font-size: 1.25rem;
 }
 
@@ -35,7 +36,7 @@
 }
 
 .transaction-filter-panel .btn--clear {
-  background: #ef4444;
+  background: var(--color-error, #ef4444);
   color: white;
 }
 
@@ -44,12 +45,12 @@
 }
 
 .transaction-filter-panel .btn--toggle {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--color-bg-tertiary, #f3f4f6);
+  color: var(--color-text-primary, #374151);
 }
 
 .transaction-filter-panel .btn--toggle:hover {
-  background: #e5e7eb;
+  background: var(--color-border-light, #e5e7eb);
 }
 
 .transaction-filter-panel .filter-content {
@@ -84,22 +85,24 @@
 
 .transaction-filter-panel label {
   font-weight: 500;
-  color: #374151;
+  color: var(--color-text-primary, #374151);
   font-size: 0.875rem;
 }
 
 .transaction-filter-panel input,
 .transaction-filter-panel select {
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border-medium, #d1d5db);
   border-radius: 6px;
   font-size: 1rem;
-  transition: border-color 0.2s;
+  background: var(--color-bg-primary, #ffffff);
+  color: var(--color-text-primary, #1f2937);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .transaction-filter-panel input:focus,
 .transaction-filter-panel select:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: var(--color-primary, #667eea);
   box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
 }

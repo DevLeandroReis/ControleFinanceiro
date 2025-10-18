@@ -80,7 +80,7 @@ npm run lint     # Executa o linter
 Copie o arquivo `.env.example` para `.env` e configure as variáveis:
 
 ```bash
-VITE_API_BASE_URL=http://localhost:5000
+VITE_API_BASE_URL=http://localhost:5001
 VITE_APP_NAME=Controle Financeiro
 VITE_APP_VERSION=0.0.1
 ```

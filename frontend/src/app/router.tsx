@@ -1,8 +1,7 @@
-import { createBrowserRouter } from 'react-router-dom';
-import { RootLayout } from './layouts';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { AuthenticatedLayout } from './layouts';
 import { ProtectedRoute } from '../features';
 import { 
-  HomePage, 
   LoginPage,
   RegisterPage,
   ForgotPasswordPage,
@@ -11,50 +10,49 @@ import {
   TransactionsPage,
   AccountsPage,
   CategoriesPage,
+  UsersPage,
   NotFoundPage 
 } from '../pages';
 
 export const router = createBrowserRouter([
+  // Redirect root to login
   {
     path: '/',
-    element: <RootLayout />,
+    element: <Navigate to="/login" replace />,
+  },
+  // Authenticated routes with sidebar
+  {
+    path: '/',
+    element: (
+      <ProtectedRoute>
+        <AuthenticatedLayout />
+      </ProtectedRoute>
+    ),
     errorElement: <NotFoundPage />,
     children: [
       {
-        index: true,
-        element: <HomePage />,
+        path: 'dashboard',
+        element: <DashboardPage />,
       },
       {
-        path: 'dashboard',
-        element: (
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        ),
+        path: 'lancamentos',
+        element: <TransactionsPage />,
       },
       {
         path: 'transacoes',
-        element: (
-          <ProtectedRoute>
-            <TransactionsPage />
-          </ProtectedRoute>
-        ),
+        element: <TransactionsPage />,
       },
       {
         path: 'contas',
-        element: (
-          <ProtectedRoute>
-            <AccountsPage />
-          </ProtectedRoute>
-        ),
+        element: <AccountsPage />,
       },
       {
         path: 'categorias',
-        element: (
-          <ProtectedRoute>
-            <CategoriesPage />
-          </ProtectedRoute>
-        ),
+        element: <CategoriesPage />,
+      },
+      {
+        path: 'usuarios',
+        element: <UsersPage />,
       },
     ],
   },

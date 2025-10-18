@@ -3,11 +3,12 @@
 }
 
 .account-form {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-primary, #ffffff);
   border-radius: 12px;
   padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-light, #e5e7eb);
   margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
 }
 
 .form-row {
@@ -26,6 +27,7 @@
 .form-group label {
   font-weight: 500;
   font-size: 0.9rem;
+  color: var(--color-text-primary, #1f2937);
 }
 
 .form-group input,
@@ -33,32 +35,34 @@
 .form-group textarea {
   padding: 0.75rem;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: inherit;
+  border: 1px solid var(--color-border-medium, #d1d5db);
+  background: var(--color-bg-primary, #ffffff);
+  color: var(--color-text-primary, #1f2937);
   font-size: 1rem;
   font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: var(--color-primary, #667eea);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .error-message {
-  color: #ef4444;
+  color: var(--color-error, #ef4444);
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
 
 .form-error {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid #ef4444;
+  background: var(--color-error-light, #fee2e2);
+  border: 1px solid var(--color-error, #ef4444);
   border-radius: 6px;
   padding: 0.75rem;
-  color: #ef4444;
+  color: var(--color-error, #ef4444);
   margin-bottom: 1rem;
 }
 
@@ -66,6 +70,7 @@
   text-align: center;
   padding: 3rem;
   font-size: 1.25rem;
+  color: var(--color-text-secondary, #6b7280);
 }
 
 .accounts-grid {
@@ -76,16 +81,17 @@
 }
 
 .account-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-primary, #ffffff);
   border-radius: 12px;
   padding: 1.5rem;
   border-left: 4px solid;
   transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
 }
 
 .account-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
 }
 
 .account-header {
@@ -98,6 +104,7 @@
 .account-header h3 {
   margin: 0;
   font-size: 1.25rem;
+  color: var(--color-text-primary, #1f2937);
 }
 
 .btn-delete {
@@ -105,6 +112,7 @@
   border: none;
   font-size: 1.25rem;
   cursor: pointer;
+  color: var(--color-error, #ef4444);
   opacity: 0.6;
   transition: opacity 0.2s, transform 0.2s;
 }
@@ -115,7 +123,7 @@
 }
 
 .account-type {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary, #6b7280);
   font-size: 0.9rem;
   margin: 0.5rem 0;
 }

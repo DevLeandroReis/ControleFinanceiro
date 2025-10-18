@@ -22,6 +22,17 @@ namespace ControleFinanceiro
 
             // Add services to the container.
             builder.Services.AddControllers();
+
+            // Configurar CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
             
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -155,6 +166,13 @@ namespace ControleFinanceiro
             });
 
             app.UseHttpsRedirection();
+
+            // Habilitar CORS em modo Development
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseCors("AllowAll");
+            }
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

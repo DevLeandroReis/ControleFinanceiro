@@ -19,24 +19,27 @@
 .filter-select {
   padding: 0.75rem 1rem;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: inherit;
+  border: 1px solid var(--color-border-medium, #d1d5db);
+  background: var(--color-bg-primary, #ffffff);
+  color: var(--color-text-primary, #1f2937);
   font-size: 1rem;
   cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: var(--color-primary, #667eea);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .transaction-form {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-primary, #ffffff);
   border-radius: 12px;
   padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-light, #e5e7eb);
   margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
 }
 
 .form-row {
@@ -55,22 +58,25 @@
 .form-group label {
   font-weight: 500;
   font-size: 0.9rem;
+  color: var(--color-text-primary, #1f2937);
 }
 
 .form-group input,
 .form-group select {
   padding: 0.75rem;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: inherit;
+  border: 1px solid var(--color-border-medium, #d1d5db);
+  background: var(--color-bg-primary, #ffffff);
+  color: var(--color-text-primary, #1f2937);
   font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: var(--color-primary, #667eea);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .transactions-list {
@@ -81,24 +87,25 @@
 }
 
 .transaction-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-primary, #ffffff);
   border-radius: 12px;
   padding: 1.5rem;
   border-left: 4px solid;
   transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
 }
 
 .transaction-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
 }
 
 .transaction-card--income {
-  border-left-color: #4ade80;
+  border-left-color: var(--color-success, #10b981);
 }
 
 .transaction-card--expense {
-  border-left-color: #f87171;
+  border-left-color: var(--color-error, #ef4444);
 }
 
 .transaction-header {
@@ -111,6 +118,7 @@
 .transaction-header h3 {
   margin: 0;
   font-size: 1.25rem;
+  color: var(--color-text-primary, #1f2937);
 }
 
 .btn-delete {
@@ -118,6 +126,7 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: var(--color-error, #ef4444);
   opacity: 0.6;
   transition: opacity 0.2s;
   padding: 0.25rem;
@@ -139,15 +148,15 @@
 }
 
 .transaction-amount--income {
-  color: #4ade80;
+  color: var(--color-success, #10b981);
 }
 
 .transaction-amount--expense {
-  color: #f87171;
+  color: var(--color-error, #ef4444);
 }
 
 .transaction-date {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary, #6b7280);
   font-size: 0.9rem;
 }
 
@@ -182,16 +191,5 @@
   text-align: center;
   padding: 3rem;
   font-size: 1.25rem;
-}
-
-@media (prefers-color-scheme: light) {
-  .filter-select {
-    border-color: rgba(0, 0, 0, 0.2);
-    background: rgba(0, 0, 0, 0.03);
-  }
-
-  .transactions-list {
-    background: rgba(0, 0, 0, 0.03);
-    border-color: rgba(0, 0, 0, 0.1);
-  }
+  color: var(--color-text-secondary, #6b7280);
 }

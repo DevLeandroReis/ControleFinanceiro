@@ -37,62 +37,62 @@ export interface UpdateUserDTO {
  */
 export const userApi = {
   /**
-   * Login - POST /api/usuarios/login
+   * Login - POST /api/Usuarios/login
    * @param data LoginDTO
    * @returns AuthResult with token and user data
    */
   async login(data: LoginDTO): Promise<AuthResult> {
-    const response = await apiClient.post<AuthResult>('/usuarios/login', data);
+    const response = await apiClient.post<AuthResult>('/api/Usuarios/login', data);
     return response.data;
   },
 
   /**
-   * Register - POST /api/usuarios/registrar
+   * Register - POST /api/Usuarios/registrar
    * @param data RegisterDTO
    * @returns User data
    */
   async register(data: RegisterDTO): Promise<User> {
-    const response = await apiClient.post<User>('/usuarios/registrar', data);
+    const response = await apiClient.post<User>('/api/Usuarios/registrar', data);
     return response.data;
   },
 
   /**
-   * Forgot Password - POST /api/usuarios/recuperar-senha
+   * Forgot Password - POST /api/Usuarios/recuperar-senha
    * @param data ForgotPasswordDTO
    * @returns Success message
    */
   async forgotPassword(data: ForgotPasswordDTO): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/usuarios/recuperar-senha', data);
+    const response = await apiClient.post<{ message: string }>('/api/Usuarios/recuperar-senha', data);
     return response.data;
   },
 
   /**
-   * Reset Password - POST /api/usuarios/redefinir-senha
+   * Reset Password - POST /api/Usuarios/redefinir-senha
    * @param data ResetPasswordDTO
    * @returns Success message
    */
   async resetPassword(data: ResetPasswordDTO): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/usuarios/redefinir-senha', data);
+    const response = await apiClient.post<{ message: string }>('/api/Usuarios/redefinir-senha', data);
     return response.data;
   },
 
   /**
-   * Confirm Email - GET /api/usuarios/confirmar-email?token={token}
+   * Confirm Email - GET /api/Usuarios/confirmar-email?token={token}
    * @param token Email confirmation token
    * @returns Success message
    */
   async confirmEmail(token: string): Promise<{ message: string }> {
-    const response = await apiClient.get<{ message: string }>(`/usuarios/confirmar-email?token=${token}`);
+    const response = await apiClient.get<{ message: string }>(`/api/Usuarios/confirmar-email?token=${token}`);
     return response.data;
   },
 
   /**
-   * Get User by ID - GET /api/usuarios/{id}
+   * Get User by ID - GET /api/Usuarios/{id}
    * @param id User ID
    * @returns User data
    */
   async getUserById(id: string): Promise<User> {
-    const response = await apiClient.get<User>(`/usuarios/${id}`);
+    const response = await apiClient.get<User>(`/api/Usuarios/${id}`);
     return response.data;
   },
 
