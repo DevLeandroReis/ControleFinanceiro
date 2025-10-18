@@ -7,6 +7,7 @@ import type { Transaction } from '@/entities/transaction';
 import { useCategoryStore, type Category } from '@/entities/category';
 import { useAccountStore, type Account } from '@/entities/account';
 import { useEditTransaction } from '../model';
+import { Edit } from 'lucide-react';
 import './EditTransactionForm.css';
 
 interface EditTransactionFormProps {
@@ -55,7 +56,7 @@ export const EditTransactionForm: FC<EditTransactionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="edit-transaction-form">
-      <h3>✏️ Editar Transação</h3>
+      <h3><Edit size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} /> Editar Transação</h3>
 
       {error && (
         <div className="form-error" role="alert">

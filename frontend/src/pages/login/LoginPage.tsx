@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUserStore } from '../../entities/user';
 import { loginSchema, type LoginInput } from '../../entities/user/model';
+import { DollarSign } from 'lucide-react';
 import './LoginPage.css';
 
 export const LoginPage: FC = () => {
@@ -35,7 +36,7 @@ export const LoginPage: FC = () => {
     <div className="login-page">
       <div className="login-container">
         <div className="login-header">
-          <h1>💰 Controle Financeiro</h1>
+          <h1><DollarSign size={32} style={{ display: 'inline', marginRight: '10px', verticalAlign: 'middle' }} /> Controle Financeiro</h1>
           <p>Faça login para acessar sua conta</p>
         </div>
 

@@ -246,6 +246,52 @@
 			"response": []
 		},
 		{
+			"name": "05.1 - Reenviar Email de Confirma��o",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Email de confirma��o reenviado\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"joao.silva@example.com\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/usuarios/reenviar-email-confirmacao",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"usuarios",
+						"reenviar-email-confirmacao"
+					]
+				},
+				"description": "Reenvia o email de confirma��o para um usu�rio que ainda n�o confirmou o email. N�o requer autentica��o."
+			},
+			"response": []
+		},
+		{
 			"name": "06 - Obter Usu�rio por ID",
 			"event": [
 				{

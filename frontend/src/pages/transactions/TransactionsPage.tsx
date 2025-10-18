@@ -6,6 +6,7 @@ import { useTransactionStore, type Transaction, type TransactionType } from '../
 import { createTransactionSchema, type CreateTransactionInput } from '../../entities/transaction/model';
 import { useCategoryStore, type Category } from '../../entities/category';
 import { useAccountStore, type Account } from '../../entities/account';
+import { DollarSign, Plus, X, Check, Loader2, Trash2 } from 'lucide-react';
 import './TransactionsPage.css';
 
 export const TransactionsPage: FC = () => {
@@ -86,7 +87,7 @@ export const TransactionsPage: FC = () => {
   if (isLoading) {
     return (
       <div className="transactions-page">
-        <div className="loading">⏳ Carregando transações...</div>
+        <div className="loading"><Loader2 size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} className="spinning" /> Carregando transações...</div>
       </div>
     );
   }
@@ -94,13 +95,13 @@ export const TransactionsPage: FC = () => {
   return (
     <div className="transactions-page">
       <header className="page-header">
-        <h1>💰 Lançamentos</h1>
+        <h1><DollarSign size={28} style={{ display: 'inline', marginRight: '10px', verticalAlign: 'middle' }} /> Lançamentos</h1>
         <p>Gerencie suas receitas e despesas</p>
       </header>
 
       <div className="page-actions">
         <button className="btn btn--primary" onClick={() => setShowForm(!showForm)}>
-          {showForm ? '✕ Cancelar' : '➕ Nova Transação'}
+          {showForm ? <><X size={18} style={{ display: 'inline', marginRight: '6px' }} /> Cancelar</> : <><Plus size={18} style={{ display: 'inline', marginRight: '6px' }} /> Nova Transação</>}
         </button>
         <div className="filters">
           <select
@@ -197,7 +198,7 @@ export const TransactionsPage: FC = () => {
             </div>
           )}
           <button type="submit" className="btn btn--primary" disabled={isSubmitting}>
-            {isSubmitting ? '⏳ Salvando...' : '✓ Adicionar Transação'}
+            {isSubmitting ? <><Loader2 size={18} style={{ display: 'inline', marginRight: '6px' }} className="spinning" /> Salvando...</> : <><Check size={18} style={{ display: 'inline', marginRight: '6px' }} /> Adicionar Transação</>}
           </button>
         </form>
       )}
@@ -218,7 +219,7 @@ export const TransactionsPage: FC = () => {
                   onClick={() => handleDelete(transaction.id)}
                   title="Excluir transação"
                 >
-                  🗑️
+                  <Trash2 size={18} />
                 </button>
               </div>
               <div className="transaction-details">

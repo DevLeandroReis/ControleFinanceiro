@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useUserStore } from '../../entities/user';
 import type { User } from '../../entities/user';
+import { DollarSign, BarChart3, TrendingDown, Building2, FolderOpen, Users, LogOut } from 'lucide-react';
 import './Sidebar.css';
 
 interface UserState {
@@ -21,7 +22,7 @@ export const Sidebar: FC = () => {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="sidebar-logo">
-          <span className="logo-icon">💰</span>
+          <span className="logo-icon"><DollarSign size={24} /></span>
           <h2 className="logo-text">Controle Financeiro</h2>
         </div>
       </div>
@@ -33,7 +34,7 @@ export const Sidebar: FC = () => {
               to="/dashboard" 
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
-              <span className="nav-icon">📊</span>
+              <span className="nav-icon"><BarChart3 size={20} /></span>
               <span className="nav-text">Dashboard</span>
             </NavLink>
           </li>
@@ -42,7 +43,7 @@ export const Sidebar: FC = () => {
               to="/lancamentos" 
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
-              <span className="nav-icon">💸</span>
+              <span className="nav-icon"><TrendingDown size={20} /></span>
               <span className="nav-text">Lançamentos</span>
             </NavLink>
           </li>
@@ -51,7 +52,7 @@ export const Sidebar: FC = () => {
               to="/contas" 
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
-              <span className="nav-icon">🏦</span>
+              <span className="nav-icon"><Building2 size={20} /></span>
               <span className="nav-text">Contas</span>
             </NavLink>
           </li>
@@ -60,7 +61,7 @@ export const Sidebar: FC = () => {
               to="/categorias" 
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
-              <span className="nav-icon">📁</span>
+              <span className="nav-icon"><FolderOpen size={20} /></span>
               <span className="nav-text">Categorias</span>
             </NavLink>
           </li>
@@ -69,7 +70,7 @@ export const Sidebar: FC = () => {
               to="/usuarios" 
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
-              <span className="nav-icon">👥</span>
+              <span className="nav-icon"><Users size={20} /></span>
               <span className="nav-text">Usuários</span>
             </NavLink>
           </li>
@@ -87,7 +88,7 @@ export const Sidebar: FC = () => {
           </div>
         </div>
         <button onClick={handleLogout} className="logout-button">
-          <span className="logout-icon">🚪</span>
+          <span className="logout-icon"><LogOut size={20} /></span>
           <span className="logout-text">Sair</span>
         </button>
       </div>

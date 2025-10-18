@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createCategorySchema, type CreateCategoryInput } from '@/entities/category/model';
 import type { Category } from '@/entities/category';
 import { useEditCategory } from '../model';
+import { Edit } from 'lucide-react';
 import './EditCategoryForm.css';
 
 interface EditCategoryFormProps {
@@ -29,7 +30,7 @@ export const EditCategoryForm: FC<EditCategoryFormProps> = ({
       nome: category.nome,
       tipo: category.tipo,
       cor: category.cor || '#3b82f6',
-      icone: category.icone || '💰',
+      icone: category.icone || '�',
     },
   });
 
@@ -43,7 +44,7 @@ export const EditCategoryForm: FC<EditCategoryFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="edit-category-form">
-      <h3>✏️ Editar Categoria</h3>
+      <h3><Edit size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} /> Editar Categoria</h3>
 
       {error && (
         <div className="form-error" role="alert">

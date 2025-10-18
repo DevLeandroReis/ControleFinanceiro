@@ -40,11 +40,19 @@ namespace ControleFinanceiro.Application.Services
 
             var usuarioCriado = await _usuarioRepository.AddAsync(usuario);
             
-            // Enviar email de confirmação
-            await _emailService.EnviarConfirmacaoEmailAsync(
-                usuarioCriado.Email, 
-                usuarioCriado.Nome, 
-                usuarioCriado.TokenConfirmacaoEmail!);
+            // Tentar enviar email de confirmação (não deve falhar o cadastro se o email não for enviado)
+            try
+            {
+                await _emailService.EnviarConfirmacaoEmailAsync(
+                    usuarioCriado.Email, 
+                    usuarioCriado.Nome, 
+                    usuarioCriado.TokenConfirmacaoEmail!);
+            }
+            catch (Exception ex)
+            {
+                // Log do erro mas não propaga a exceção
+                Console.WriteLine($"Erro ao enviar email de confirmação: {ex.Message}");
+            }
 
             return _mapper.Map<UsuarioDto>(usuarioCriado);
         }
@@ -128,6 +136,46 @@ namespace ControleFinanceiro.Application.Services
             usuario.ConfirmarEmail();
             await _usuarioRepository.UpdateAsync(usuario);
             
+            return true;
+        }
+
+        public async Task<bool> ReenviarEmailConfirmacaoAsync(ReenviarEmailConfirmacaoDto dto)
+        {
+            var usuario = await _usuarioRepository.GetByEmailAsync(dto.Email);
+            
+            if (usuario == null || !usuario.Ativo)
+            {
+                // Por segurança, não informamos se o email existe ou não
+                return true;
+            }
+
+            // Se o email já foi confirmado, não reenvia
+            if (usuario.EmailConfirmado)
+            {
+                return true;
+            }
+
+            // Gerar novo token se não existir
+            if (string.IsNullOrEmpty(usuario.TokenConfirmacaoEmail))
+            {
+                usuario.DefinirTokenConfirmacaoEmail(Guid.NewGuid().ToString());
+                await _usuarioRepository.UpdateAsync(usuario);
+            }
+
+            // Tentar enviar email
+            try
+            {
+                await _emailService.EnviarConfirmacaoEmailAsync(
+                    usuario.Email, 
+                    usuario.Nome, 
+                    usuario.TokenConfirmacaoEmail!);
+            }
+            catch (Exception ex)
+            {
+                // Log do erro mas não propaga a exceção
+                Console.WriteLine($"Erro ao reenviar email de confirmação: {ex.Message}");
+            }
+
             return true;
         }
 

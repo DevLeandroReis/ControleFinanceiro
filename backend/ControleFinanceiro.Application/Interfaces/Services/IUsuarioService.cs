@@ -9,6 +9,7 @@ namespace ControleFinanceiro.Application.Interfaces.Services
         Task<bool> RecuperarSenhaAsync(RecuperarSenhaDto recuperarSenhaDto);
         Task<bool> RedefinirSenhaAsync(RedefinirSenhaDto redefinirSenhaDto);
         Task<bool> ConfirmarEmailAsync(string token);
+        Task<bool> ReenviarEmailConfirmacaoAsync(ReenviarEmailConfirmacaoDto dto);
         Task<UsuarioDto?> GetByIdAsync(Guid id);
         Task<UsuarioDto?> GetByEmailAsync(string email);
     }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUserStore, registerSchema, type RegisterInput } from '../../entities/user';
+import { DollarSign, Loader2, Sparkles } from 'lucide-react';
 import './RegisterPage.css';
 
 export const RegisterPage: FC = () => {
@@ -39,7 +40,7 @@ export const RegisterPage: FC = () => {
     <div className="register-page">
       <div className="register-container">
         <div className="register-header">
-          <h1>💰 Controle Financeiro</h1>
+          <h1><DollarSign size={32} style={{ display: 'inline', marginRight: '10px', verticalAlign: 'middle' }} /> Controle Financeiro</h1>
           <p>Crie sua conta gratuitamente</p>
         </div>
 
@@ -121,7 +122,7 @@ export const RegisterPage: FC = () => {
             className="btn btn--primary btn--full" 
             disabled={isSubmitting || isLoading}
           >
-            {isSubmitting || isLoading ? '⏳ Cadastrando...' : '✨ Criar conta'}
+            {isSubmitting || isLoading ? <><Loader2 size={18} style={{ display: 'inline', marginRight: '6px' }} className="spinning" /> Cadastrando...</> : <><Sparkles size={18} style={{ display: 'inline', marginRight: '6px' }} /> Criar conta</>}
           </button>
         </form>
 

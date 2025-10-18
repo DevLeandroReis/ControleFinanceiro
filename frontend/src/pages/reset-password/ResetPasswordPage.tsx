@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUserStore, resetPasswordSchema, type ResetPasswordInput } from '../../entities/user';
+import { AlertTriangle } from 'lucide-react';
 import './ResetPasswordPage.css';
 
 export const ResetPasswordPage: FC = () => {
@@ -42,7 +43,7 @@ export const ResetPasswordPage: FC = () => {
       <div className="reset-password-page">
         <div className="reset-password-container">
           <div className="reset-password-header">
-            <h1>⚠️ Token Inválido</h1>
+            <h1><AlertTriangle size={32} style={{ display: 'inline', marginRight: '10px', verticalAlign: 'middle' }} /> Token Inválido</h1>
             <p>O link de redefinição de senha é inválido ou expirou.</p>
           </div>
           <div className="reset-password-footer">

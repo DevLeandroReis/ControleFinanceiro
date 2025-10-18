@@ -150,6 +150,31 @@ namespace ControleFinanceiro.Presentation.Controllers
         }
 
         /// <summary>
+        /// Reenviar email de confirmação
+        /// </summary>
+        [HttpPost("reenviar-email-confirmacao")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> ReenviarEmailConfirmacao([FromBody] ReenviarEmailConfirmacaoDto dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                await _usuarioService.ReenviarEmailConfirmacaoAsync(dto);
+                return Ok(new { message = "Se o email existir e não estiver confirmado, você receberá um novo email de confirmação" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao reenviar email de confirmação");
+                return StatusCode(500, "Erro interno do servidor");
+            }
+        }
+
+        /// <summary>
         /// Obter usuário por ID
         /// </summary>
         [HttpGet("{id:guid}")]

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCategoryStore, type Category, type CategoryType } from '../../entities/category';
 import { createCategorySchema, type CreateCategoryInput } from '../../entities/category/model';
+import { FolderOpen, Plus, X, Zap, Loader2, TrendingDown, DollarSign, Trash2 } from 'lucide-react';
 import './CategoriesPage.css';
 
 export const CategoriesPage: FC = () => {
@@ -31,7 +32,7 @@ export const CategoriesPage: FC = () => {
       nome: '',
       tipo: 'expense',
       cor: '#ef4444',
-      icone: '💰',
+      icone: '�',
     },
   });
 
@@ -79,7 +80,7 @@ export const CategoriesPage: FC = () => {
   if (isLoading) {
     return (
       <div className="categories-page">
-        <div className="loading">⏳ Carregando categorias...</div>
+        <div className="loading"><Loader2 size={20} style={{ display: 'inline', marginRight: '8px' }} className="spinning" /> Carregando categorias...</div>
       </div>
     );
   }
@@ -87,17 +88,17 @@ export const CategoriesPage: FC = () => {
   return (
     <div className="categories-page">
       <header className="page-header">
-        <h1>📁 Categorias</h1>
+        <h1><FolderOpen size={28} style={{ display: 'inline', marginRight: '10px', verticalAlign: 'middle' }} /> Categorias</h1>
         <p>Organize seus gastos por categoria</p>
       </header>
 
       <div className="page-actions">
         <div>
           <button className="btn btn--primary" onClick={() => setShowForm(!showForm)}>
-            {showForm ? '✕ Cancelar' : '➕ Nova Categoria'}
+            {showForm ? <><X size={18} style={{ display: 'inline', marginRight: '6px' }} /> Cancelar</> : <><Plus size={18} style={{ display: 'inline', marginRight: '6px' }} /> Nova Categoria</>}
           </button>
           <button className="btn btn--secondary" onClick={handleCreateDefaults}>
-            ⚡ Criar Categorias Padrão
+            <Zap size={18} style={{ display: 'inline', marginRight: '6px' }} /> Criar Categorias Padrão
           </button>
         </div>
         <select
@@ -172,7 +173,7 @@ export const CategoriesPage: FC = () => {
           <>
             {expenseCategories.length > 0 && (
               <div className="category-section">
-                <h2>💸 Despesas ({expenseCategories.length})</h2>
+                <h2><TrendingDown size={22} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} /> Despesas ({expenseCategories.length})</h2>
                 <div className="categories-grid">
                   {expenseCategories.map((category: Category) => (
                     <div
@@ -190,7 +191,7 @@ export const CategoriesPage: FC = () => {
                           onClick={() => handleDelete(category.id)}
                           title="Excluir categoria"
                         >
-                          🗑️
+                          <Trash2 size={18} />
                         </button>
                       </div>
                     </div>
@@ -201,7 +202,7 @@ export const CategoriesPage: FC = () => {
 
             {incomeCategories.length > 0 && (
               <div className="category-section">
-                <h2>💰 Receitas ({incomeCategories.length})</h2>
+                <h2><DollarSign size={22} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} /> Receitas ({incomeCategories.length})</h2>
                 <div className="categories-grid">
                   {incomeCategories.map((category: Category) => (
                     <div
@@ -219,7 +220,7 @@ export const CategoriesPage: FC = () => {
                           onClick={() => handleDelete(category.id)}
                           title="Excluir categoria"
                         >
-                          🗑️
+                          <Trash2 size={18} />
                         </button>
                       </div>
                     </div>

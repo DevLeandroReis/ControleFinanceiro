@@ -6,6 +6,7 @@ import { createTransactionSchema, type CreateTransactionInput } from '@/entities
 import { useCategoryStore, type Category } from '@/entities/category';
 import { useAccountStore, type Account } from '@/entities/account';
 import { useAddTransaction } from '../model';
+import { Plus } from 'lucide-react';
 import './AddTransactionForm.css';
 
 interface AddTransactionFormProps {
@@ -51,7 +52,7 @@ export const AddTransactionForm: FC<AddTransactionFormProps> = ({ onSuccess, onC
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="add-transaction-form">
-      <h3>➕ Nova Transação</h3>
+      <h3><Plus size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} /> Nova Transação</h3>
 
       {error && (
         <div className="form-error" role="alert">

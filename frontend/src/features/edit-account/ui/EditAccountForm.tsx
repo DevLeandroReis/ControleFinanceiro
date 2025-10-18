@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createAccountSchema, type CreateAccountInput } from '@/entities/account/model';
 import type { Account } from '@/entities/account';
 import { useEditAccount } from '../model';
+import { Edit } from 'lucide-react';
 import './EditAccountForm.css';
 
 interface EditAccountFormProps {
@@ -50,7 +51,7 @@ export const EditAccountForm: FC<EditAccountFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="edit-account-form">
-      <h3>✏️ Editar Conta</h3>
+      <h3><Edit size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} /> Editar Conta</h3>
 
       {error && (
         <div className="form-error" role="alert">

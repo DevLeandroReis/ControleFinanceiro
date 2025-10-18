@@ -142,3 +142,17 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-tertiary);
 }
+
+/* Animação de spinner para ícones do Lucide */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}

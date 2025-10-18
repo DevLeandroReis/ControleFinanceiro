@@ -4,6 +4,7 @@ import type { TransactionType } from '@/entities/transaction';
 import { useCategoryStore, type Category } from '@/entities/category';
 import { useAccountStore, type Account } from '@/entities/account';
 import type { TransactionFilters } from '../model';
+import { Search } from 'lucide-react';
 import './TransactionFilterPanel.css';
 
 interface TransactionFilterPanelProps {
@@ -33,7 +34,7 @@ export const TransactionFilterPanel: FC<TransactionFilterPanelProps> = ({
   return (
     <div className="transaction-filter-panel">
       <div className="filter-header">
-        <h3>🔍 Filtros</h3>
+        <h3><Search size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} /> Filtros</h3>
         <div className="filter-actions">
           {hasActiveFilters && (
             <button

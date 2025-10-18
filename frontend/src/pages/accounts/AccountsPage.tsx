@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAccountStore, type Account } from '../../entities/account';
 import { createAccountSchema, type CreateAccountInput } from '../../entities/account/model';
+import { Building2, Plus, X, Loader2, Trash2 } from 'lucide-react';
 import './AccountsPage.css';
 
 export const AccountsPage: FC = () => {
@@ -77,7 +78,7 @@ export const AccountsPage: FC = () => {
   if (isLoading) {
     return (
       <div className="accounts-page">
-        <div className="loading">⏳ Carregando contas...</div>
+        <div className="loading"><Loader2 size={20} style={{ display: 'inline', marginRight: '8px' }} className="spinning" /> Carregando contas...</div>
       </div>
     );
   }
@@ -85,13 +86,13 @@ export const AccountsPage: FC = () => {
   return (
     <div className="accounts-page">
       <header className="page-header">
-        <h1>🏦 Contas</h1>
+        <h1><Building2 size={28} style={{ display: 'inline', marginRight: '10px', verticalAlign: 'middle' }} /> Contas</h1>
         <p>Gerencie suas contas bancárias e carteiras</p>
       </header>
 
       <div className="page-actions">
         <button className="btn btn--primary" onClick={() => setShowForm(!showForm)}>
-          {showForm ? '✕ Cancelar' : '➕ Nova Conta'}
+          {showForm ? <><X size={18} style={{ display: 'inline', marginRight: '6px' }} /> Cancelar</> : <><Plus size={18} style={{ display: 'inline', marginRight: '6px' }} /> Nova Conta</>}
         </button>
       </div>
 
@@ -168,7 +169,7 @@ export const AccountsPage: FC = () => {
                   onClick={() => handleDelete(account.id)}
                   title="Excluir conta"
                 >
-                  🗑️
+                  <Trash2 size={18} />
                 </button>
               </div>
               <p className="account-type">{getTipoLabel(account.tipo)}</p>
