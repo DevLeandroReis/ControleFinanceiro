@@ -1,0 +1,193 @@
+.access-request-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #6c757d;
+  transition: all 0.3s ease;
+}
+
+.access-request-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.access-request-card--pending {
+  border-left-color: #ffc107;
+}
+
+.access-request-card--approved {
+  border-left-color: #28a745;
+}
+
+.access-request-card--rejected,
+.access-request-card--cancelled {
+  border-left-color: #dc3545;
+  opacity: 0.8;
+}
+
+.access-request-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.access-request-card__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.access-request-card--pending .access-request-card__status {
+  color: #ffc107;
+}
+
+.access-request-card--approved .access-request-card__status {
+  color: #28a745;
+}
+
+.access-request-card--rejected .access-request-card__status,
+.access-request-card--cancelled .access-request-card__status {
+  color: #dc3545;
+}
+
+.access-request-card__date {
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+
+.access-request-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.access-request-card__account {
+  background: linear-gradient(135deg, rgba(100, 108, 255, 0.1), rgba(83, 91, 242, 0.05));
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.access-request-card__account-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.access-request-card__user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.access-request-card__user-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.access-request-card__user-item strong {
+  color: #212529;
+}
+
+.access-request-card__message {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.access-request-card__message p {
+  margin: 0 0 8px 0;
+}
+
+.access-request-card__message p:last-child {
+  margin-bottom: 0;
+}
+
+.access-request-card__response-date {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-style: italic;
+  text-align: right;
+}
+
+.access-request-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.access-request-card__btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.access-request-card__btn--approve {
+  background: #28a745;
+  color: white;
+}
+
+.access-request-card__btn--approve:hover {
+  background: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.access-request-card__btn--reject {
+  background: #dc3545;
+  color: white;
+}
+
+.access-request-card__btn--reject:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.access-request-card__btn--cancel {
+  background: #6c757d;
+  color: white;
+}
+
+.access-request-card__btn--cancel:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+@media (max-width: 768px) {
+  .access-request-card {
+    padding: 16px;
+  }
+
+  .access-request-card__actions {
+    flex-direction: column;
+  }
+
+  .access-request-card__btn {
+    width: 100%;
+  }
+}

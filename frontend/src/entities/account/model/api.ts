@@ -1,24 +1,29 @@
 import { apiClient } from '@/shared/api';
-import type { Account } from './types';
+import type { Account, AccessRequest, UserAccount } from './types';
 
 export interface CreateAccountDTO {
   nome: string;
-  tipo: 'corrente' | 'poupanca' | 'investimento' | 'carteira';
-  saldoInicial: number;
-  cor?: string;
   descricao?: string;
 }
 
-export interface UpdateAccountDTO extends Partial<CreateAccountDTO> {
-  id: string;
+export interface UpdateAccountDTO {
+  nome?: string;
+  descricao?: string;
+}
+
+export interface RequestAccessDTO {
+  contaId: string;
+  mensagem?: string;
 }
 
 export const accountApi = {
+  // ========== CRUD Operations ==========
+  
   /**
    * Busca todas as contas do usuário
    */
   async getAll(): Promise<Account[]> {
-    const response = await apiClient.get<Account[]>('/api/Contas');
+    const response = await apiClient.get<Account[]>('/api/Contas/minhas');
     return response.data;
   },
 
@@ -41,7 +46,7 @@ export const accountApi = {
   /**
    * Atualiza uma conta existente
    */
-  async update(id: string, data: Partial<CreateAccountDTO>): Promise<Account> {
+  async update(id: string, data: UpdateAccountDTO): Promise<Account> {
     const response = await apiClient.put<Account>(`/api/Contas/${id}`, data);
     return response.data;
   },
@@ -54,18 +59,94 @@ export const accountApi = {
   },
 
   /**
-   * Busca o saldo total de todas as contas
+   * Ativa uma conta
    */
-  async getTotalBalance(): Promise<{ total: number }> {
-    const response = await apiClient.get<{ total: number }>('/api/Contas/saldo-total');
+  async activate(id: string): Promise<void> {
+    await apiClient.patch<void>(`/api/Contas/${id}/ativar`);
+  },
+
+  /**
+   * Desativa uma conta
+   */
+  async deactivate(id: string): Promise<void> {
+    await apiClient.patch<void>(`/api/Contas/${id}/desativar`);
+  },
+
+  // ========== Access Request Operations ==========
+  
+  /**
+   * Solicita acesso a uma conta usando seu ID
+   */
+  async requestAccess(data: RequestAccessDTO): Promise<AccessRequest> {
+    const response = await apiClient.post<AccessRequest>('/api/Contas/solicitar-acesso', data);
     return response.data;
   },
 
   /**
-   * Busca o saldo de uma conta específica
+   * Aprova uma solicitação de acesso
    */
-  async getBalance(id: string): Promise<{ saldo: number }> {
-    const response = await apiClient.get<{ saldo: number }>(`/api/Contas/${id}/saldo`);
+  async approveRequest(solicitacaoId: string): Promise<void> {
+    await apiClient.post<void>(`/api/Contas/solicitacoes/${solicitacaoId}/aprovar`);
+  },
+
+  /**
+   * Rejeita uma solicitação de acesso
+   */
+  async rejectRequest(solicitacaoId: string): Promise<void> {
+    await apiClient.post<void>(`/api/Contas/solicitacoes/${solicitacaoId}/rejeitar`);
+  },
+
+  /**
+   * Cancela uma solicitação de acesso enviada
+   */
+  async cancelRequest(solicitacaoId: string): Promise<void> {
+    await apiClient.post<void>(`/api/Contas/solicitacoes/${solicitacaoId}/cancelar`);
+  },
+
+  /**
+   * Busca solicitações de acesso recebidas (como proprietário)
+   */
+  async getReceivedRequests(): Promise<AccessRequest[]> {
+    const response = await apiClient.get<AccessRequest[]>('/api/Contas/solicitacoes/recebidas');
     return response.data;
-  }
+  },
+
+  /**
+   * Busca solicitações de acesso enviadas (como solicitante)
+   */
+  async getSentRequests(): Promise<AccessRequest[]> {
+    const response = await apiClient.get<AccessRequest[]>('/api/Contas/solicitacoes/enviadas');
+    return response.data;
+  },
+
+  // ========== User Management Operations ==========
+  
+  /**
+   * Busca os usuários de uma conta
+   */
+  async getAccountUsers(contaId: string): Promise<UserAccount[]> {
+    const response = await apiClient.get<UserAccount[]>(`/api/Contas/${contaId}/usuarios`);
+    return response.data;
+  },
+
+  /**
+   * Remove um usuário de uma conta
+   */
+  async removeUser(contaId: string, usuarioId: string): Promise<void> {
+    await apiClient.delete<void>(`/api/Contas/${contaId}/usuarios/${usuarioId}`);
+  },
+
+  /**
+   * Concede permissão para adicionar usuários
+   */
+  async grantPermission(contaId: string, usuarioId: string): Promise<void> {
+    await apiClient.post<void>(`/api/Contas/${contaId}/usuarios/${usuarioId}/conceder-permissao`);
+  },
+
+  /**
+   * Remove permissão para adicionar usuários
+   */
+  async revokePermission(contaId: string, usuarioId: string): Promise<void> {
+    await apiClient.post<void>(`/api/Contas/${contaId}/usuarios/${usuarioId}/remover-permissao`);
+  },
 };
