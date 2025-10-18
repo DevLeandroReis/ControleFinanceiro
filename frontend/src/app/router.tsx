@@ -9,8 +9,6 @@ import {
   DashboardPage,
   TransactionsPage,
   AccountsPage,
-  CategoriesPage,
-  UsersPage,
   NotFoundPage 
 } from '../pages';
 
@@ -45,14 +43,6 @@ export const router = createBrowserRouter([
       {
         path: 'contas',
         element: <AccountsPage />,
-      },
-      {
-        path: 'categorias',
-        element: <CategoriesPage />,
-      },
-      {
-        path: 'usuarios',
-        element: <UsersPage />,
       },
     ],
   },

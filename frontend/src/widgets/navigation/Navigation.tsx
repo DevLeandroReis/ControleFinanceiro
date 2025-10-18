@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { NavLink } from 'react-router-dom';
-import { DollarSign, Home, BarChart3, Building2, FolderOpen } from 'lucide-react';
+import { DollarSign, Home, BarChart3, Building2 } from 'lucide-react';
 import './Navigation.css';
 
 export const Navigation: FC = () => {
@@ -30,11 +30,6 @@ export const Navigation: FC = () => {
           <li>
             <NavLink to="/contas" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
               <Building2 size={18} style={{ display: 'inline', marginRight: '6px' }} /> Contas
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/categorias" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
-              <FolderOpen size={18} style={{ display: 'inline', marginRight: '6px' }} /> Categorias
             </NavLink>
           </li>
         </ul>

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useUserStore } from '../../entities/user';
 import type { User } from '../../entities/user';
-import { DollarSign, BarChart3, TrendingDown, Building2, FolderOpen, Users, LogOut } from 'lucide-react';
+import { DollarSign, BarChart3, TrendingDown, Building2, LogOut } from 'lucide-react';
 import './Sidebar.css';
 
 interface UserState {
@@ -54,24 +54,6 @@ export const Sidebar: FC = () => {
             >
               <span className="nav-icon"><Building2 size={20} /></span>
               <span className="nav-text">Contas</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/categorias" 
-              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            >
-              <span className="nav-icon"><FolderOpen size={20} /></span>
-              <span className="nav-text">Categorias</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/usuarios" 
-              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            >
-              <span className="nav-icon"><Users size={20} /></span>
-              <span className="nav-text">Usuários</span>
             </NavLink>
           </li>
         </ul>
